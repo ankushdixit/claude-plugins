@@ -2,6 +2,8 @@
 
 Official marketplace for Claude Code plugins by Ankush Dixit.
 
+> **📦 Distribution Repository** - This is a marketplace for installing plugins. For SDD plugin development, issues, and contributions, visit the main repository: **[github.com/ankushdixit/sdd](https://github.com/ankushdixit/sdd)**
+
 ## Available Plugins
 
 ### 📦 SDD (Session-Driven Development)
@@ -241,14 +243,25 @@ Quality gates gracefully skip when tools aren't available, so you only need to i
 
 ---
 
-## Contributing Plugins
+## Contributing
 
-Want to submit a plugin to this marketplace? Please open an issue with:
+### For SDD Plugin Contributions
 
+**This repository is for marketplace distribution only.** For SDD plugin development:
+
+- 🐛 **Report bugs**: https://github.com/ankushdixit/sdd/issues
+- 💡 **Request features**: https://github.com/ankushdixit/sdd/issues
+- 🔧 **Submit PRs**: https://github.com/ankushdixit/sdd/pulls
+- 📖 **View docs**: https://github.com/ankushdixit/sdd#readme
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+### Submitting Other Plugins
+
+To submit a different plugin to this marketplace, please open an issue with:
 - Plugin name and description
 - GitHub repository URL
 - Brief overview of features
-- Why it should be included
 - Documentation link
 
 [Open a Plugin Submission Issue →](https://github.com/ankushdixit/claude-plugins/issues/new?title=Plugin%20Submission:%20[Your%20Plugin%20Name])
