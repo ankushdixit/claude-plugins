@@ -61,4 +61,4 @@ Suggest to users:
 - Use specific keywords for better results
 - Try tag names if searching by topic
 - Use category names to narrow results
-- Combine with `/learn-show --category` for focused browsing
+- Combine with `/sdd:learn-show --category` for focused browsing
