@@ -4,84 +4,243 @@ Official marketplace for Claude Code plugins by Ankush Dixit.
 
 ## Available Plugins
 
-### 📦 Claude Session Plugin
+### 📦 SDD (Session-Driven Development)
 
 **Session-Driven Development for Claude Code** - Maintain perfect context across multiple AI coding sessions.
 
-- **Repository**: [ankushdixit/claude-session-plugin](https://github.com/ankushdixit/claude-session-plugin)
+- **Plugin Name**: `sdd`
 - **Version**: 0.5.6
 - **Status**: Production-ready ✅
+- **License**: MIT
 
-**Features:**
-- ✅ Session management with comprehensive briefings
-- ✅ Work item tracking with dependency graphs
-- ✅ Learning capture and AI-powered curation
-- ✅ Quality gates (tests, linting, security, documentation)
-- ✅ Integration testing and deployment support
-- ✅ Git workflow automation
-- ✅ Critical path analysis and bottleneck detection
+**Key Features:**
+- ✅ **Session Management** - Comprehensive briefings with perfect context continuity
+- ✅ **Work Item Tracking** - Dependency graphs, critical path analysis, bottleneck detection
+- ✅ **Learning System** - AI-powered knowledge capture and curation (6 categories)
+- ✅ **Quality Gates** - Automated tests, linting, security scans, documentation checks
+- ✅ **Integration Testing** - API contract validation, environment checks, performance benchmarks
+- ✅ **Deployment Support** - Multi-environment deployment with validation
+- ✅ **Git Workflow** - Automated commits, standardized messages, push automation
 
 **Commands:** 15 slash commands for complete session-driven development workflow
 
-[View Full Documentation →](https://github.com/ankushdixit/claude-session-plugin#readme)
+[View Full Documentation →](https://github.com/ankushdixit/claude-plugins/tree/main/sdd#readme)
 
 ---
 
 ## Installation
 
-### 1. Add This Marketplace
+### Quick Start
+
+#### 1. Add This Marketplace
 
 In Claude Code, run:
 ```
 /plugin
 ```
 
-Select "Add marketplace" and enter:
+Select **"Add marketplace"** and enter:
 ```
 ankushdixit/claude-plugins
 ```
 
-### 2. Browse and Install Plugins
+#### 2. Install the SDD Plugin
 
-1. Select "Browse and install plugins"
-2. Choose the plugin you want to install
-3. Click install
+1. Select **"Browse and install plugins"**
+2. Choose `sdd`
+3. Click **Install**
 4. Restart Claude Code
 
-### 3. Verify Installation
+#### 3. Verify Installation
 
-Type `/` in Claude Code to see available commands from installed plugins.
-
-For example, after installing Claude Session Plugin, type:
+Type `/` in Claude Code to see available commands. Try:
 ```
-/session-
+/sdd:init
 ```
 
-You should see autocomplete suggestions for session commands.
+You should see the SDD initialization command ready to use.
 
 ---
 
-## Plugin Submission
+## Using the SDD Plugin
 
-Want to submit a plugin to this marketplace? Please open an issue in the [marketplace repository](https://github.com/ankushdixit/claude-plugins/issues) with:
+### Quick Start Workflow
+
+1. **Initialize your project:**
+   ```
+   /sdd:init
+   ```
+
+2. **Create a work item:**
+   ```
+   /sdd:work-new
+   ```
+
+3. **Start a session:**
+   ```
+   /sdd:start
+   ```
+
+4. **Develop with Claude** and capture learnings:
+   ```
+   /sdd:learn
+   ```
+
+5. **End the session** (runs quality gates):
+   ```
+   /sdd:end
+   ```
+
+### Available Commands
+
+**Session Management:**
+- `/sdd:init` - Initialize project structure
+- `/sdd:start` - Begin work session with comprehensive briefing
+- `/sdd:end` - Complete session with quality gates
+- `/sdd:validate` - Pre-flight check before completion
+- `/sdd:status` - Quick session overview
+
+**Work Item Management:**
+- `/sdd:work-new` - Create new work item with dependencies
+- `/sdd:work-list` - List work items with filters
+- `/sdd:work-show` - Show work item details
+- `/sdd:work-update` - Update work item fields
+- `/sdd:work-next` - Get next recommended work item
+- `/sdd:work-graph` - Visualize dependencies with critical path
+
+**Learning Management:**
+- `/sdd:learn` - Capture insight during development
+- `/sdd:learn-show` - Browse learnings with filters
+- `/sdd:learn-search` - Full-text search across learnings
+- `/sdd:learn-curate` - Run AI-powered curation
+
+---
+
+## What Makes SDD Different?
+
+### The Problem It Solves
+
+Traditional AI coding sessions suffer from:
+- **Context loss** between sessions - AI forgets what was done previously
+- **Quality entropy** over time - Standards slip without enforcement
+- **Knowledge fragmentation** - Learnings get lost across interactions
+- **Lack of process rigor** - No systematic workflow for complex projects
+
+### The SDD Solution
+
+Session-Driven Development provides:
+- **Perfect context continuity** through automated briefings that load full project state
+- **Quality enforcement** via automated validation gates (tests, linting, security scans)
+- **Knowledge accumulation** through learnings system with AI-powered categorization
+- **Dependency-driven workflow** with logical ordering based on dependencies
+- **Living documentation** that stays current automatically with git integration
+
+---
+
+## Plugin Development Status
+
+**Current Version:** 0.5.6 (Production-ready)
+
+### Completed Phases
+
+| Phase | Version | Description | Status |
+|-------|---------|-------------|--------|
+| Phase 0 | v0.0 | Foundation & Documentation | ✅ Complete |
+| Phase 1 | v0.1 | Core Plugin Foundation | ✅ Complete |
+| Phase 2 | v0.2 | Work Item System | ✅ Complete |
+| Phase 3 | v0.3 | Dependency Visualization | ✅ Complete |
+| Phase 4 | v0.4 | Learning Management | ✅ Complete |
+| Phase 5 | v0.5 | Quality Gates | ✅ Complete |
+| Phase 5.5 | v0.5.5 | Integration Testing | ✅ Complete |
+| Phase 5.6 | v0.5.6 | Deployment Support | ✅ Complete |
+
+**Test Coverage:** 343/343 tests passing (100%)
+
+### Upcoming Features
+
+- **Phase 6** (v0.6): Spec-Kit Integration - Import work items from specifications
+- **Phase 7** (v0.7+): Advanced Features - Templates, metrics, AI enhancements
+
+---
+
+## Requirements
+
+### Core Requirements
+
+- **Claude Code**: Desktop application (required)
+- **Python 3.9+**: Core scripts are written in Python
+- **Git**: Required for version control integration
+
+### Optional Tools (for quality gates)
+
+**Python Projects:**
+- `pytest` (testing)
+- `ruff` (linting/formatting)
+- `bandit`, `safety` (security scanning)
+
+**JavaScript/TypeScript Projects:**
+- `eslint`, `prettier` (linting/formatting)
+- `npm audit` (security)
+
+**Visualization:**
+- `graphviz` (for SVG dependency graph generation)
+
+Quality gates gracefully skip when tools aren't available, so you only need to install what you use.
+
+---
+
+## Contributing Plugins
+
+Want to submit a plugin to this marketplace? Please open an issue with:
 
 - Plugin name and description
 - GitHub repository URL
 - Brief overview of features
 - Why it should be included
+- Documentation link
+
+[Open a Plugin Submission Issue →](https://github.com/ankushdixit/claude-plugins/issues/new?title=Plugin%20Submission:%20[Your%20Plugin%20Name])
 
 ---
 
 ## Support
 
-For issues with specific plugins, please visit their respective repositories.
+### For SDD Plugin Issues
 
-For marketplace-related issues, please [open an issue](https://github.com/ankushdixit/claude-plugins/issues).
+- [Report SDD Issues](https://github.com/ankushdixit/claude-plugins/issues)
+- [View SDD Documentation](https://github.com/ankushdixit/claude-plugins/tree/main/sdd#readme)
+
+### For Marketplace Issues
+
+- [Report Marketplace Issues](https://github.com/ankushdixit/claude-plugins/issues)
+
+---
+
+## Technology Stack
+
+**SDD Plugin:**
+- **Language:** Python 3.9+
+- **Plugin System:** Claude Code native extensions
+- **Visualization:** Graphviz (dependency graphs)
+- **Testing:** pytest (quality gates)
+- **Linting:** ruff (code quality)
 
 ---
 
 ## License
 
-Each plugin has its own license. See individual plugin repositories for details.
+Each plugin has its own license. See individual plugin directories for details.
 
-- **Claude Session Plugin**: MIT License
+- **SDD Plugin**: MIT License
+
+---
+
+## Resources
+
+- [Claude Code Documentation](https://docs.claude.com/en/docs/claude-code)
+- [Plugin Development Guide](https://docs.claude.com/en/docs/claude-code/plugins)
+- [Marketplace Documentation](https://docs.claude.com/en/docs/claude-code/plugin-marketplaces)
+
+---
+
+**Ready for use!** Install the SDD plugin and start building with perfect context continuity.

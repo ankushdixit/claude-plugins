@@ -1,13 +1,38 @@
 {
-  "name": "ankush-claude-plugins",
+  "name": "claude-plugins",
   "owner": {
-    "name": "Ankush Dixit"
+    "name": "Ankush Dixit",
+    "email": "ankushdixit@users.noreply.github.com"
+  },
+  "metadata": {
+    "description": "Official marketplace for Claude Code plugins",
+    "version": "1.0.0",
+    "pluginRoot": "."
   },
   "plugins": [
     {
-      "name": "claude-session-plugin",
-      "source": "ankushdixit/claude-session-plugin",
-      "description": "Session-Driven Development for Claude Code - Maintain perfect context across multiple AI coding sessions with quality gates, dependency management, and knowledge accumulation"
+      "name": "sdd",
+      "source": "./sdd",
+      "description": "Session-Driven Development for Claude Code - Maintain perfect context across multiple AI coding sessions with quality gates, dependency management, and knowledge accumulation",
+      "version": "0.5.6",
+      "author": {
+        "name": "Ankush Dixit",
+        "url": "https://github.com/ankushdixit"
+      },
+      "homepage": "https://github.com/ankushdixit/sdd",
+      "repository": "https://github.com/ankushdixit/sdd",
+      "license": "MIT",
+      "keywords": [
+        "session-management",
+        "quality-gates",
+        "dependency-management",
+        "learning-system",
+        "ai-development",
+        "claude-code",
+        "sdd"
+      ],
+      "category": "productivity",
+      "tags": ["session", "quality", "learning", "workflow"]
     }
   ]
 }
