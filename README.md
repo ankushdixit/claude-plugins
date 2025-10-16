@@ -24,7 +24,10 @@ Official marketplace for Claude Code plugins by Ankush Dixit.
 
 **Commands:** 15 slash commands for complete session-driven development workflow
 
-[View Full Documentation →](https://github.com/ankushdixit/claude-plugins/tree/main/sdd#readme)
+**Documentation & Source:**
+- [View Full Documentation →](https://github.com/ankushdixit/sdd#readme)
+- [Standalone Repository](https://github.com/ankushdixit/sdd) (for direct clone installation)
+- [Marketplace Repository](https://github.com/ankushdixit/claude-plugins) (this repo)
 
 ---
 
@@ -62,7 +65,56 @@ You should see the SDD initialization command ready to use.
 
 ---
 
+## Installation Methods Comparison
+
+SDD can be installed in two different ways, depending on your preference:
+
+### Method 1: Via Marketplace (Recommended)
+
+**Install from:** `ankushdixit/claude-plugins` marketplace
+
+**Commands use the `sdd:` prefix:** `/sdd:init`, `/sdd:work-new`, `/sdd:start`
+
+**Best for:**
+- Using SDD across multiple projects
+- Easy updates through the marketplace
+- Keeping commands organized with prefixes
+- Installing multiple plugins without command conflicts
+
+**Installation:**
+```
+/plugin marketplace add ankushdixit/claude-plugins
+# Then install the sdd plugin
+```
+
+---
+
+### Method 2: Direct Clone (Alternative)
+
+**Install from:** `https://github.com/ankushdixit/sdd` repository
+
+**Commands use NO prefix:** `/init`, `/work-new`, `/start`
+
+**Best for:**
+- Project-specific installation
+- Customizing commands locally
+- Using SDD in a single project
+- Wanting shorter command names
+
+**Installation:**
+```bash
+# Clone into your project's .claude directory
+cd /path/to/your/project
+git clone https://github.com/ankushdixit/sdd .claude
+```
+
+**Note:** With direct clone, commands are available immediately without the `sdd:` prefix. For example, use `/init` instead of `/sdd:init`.
+
+---
+
 ## Using the SDD Plugin
+
+**Note:** The examples below use the marketplace installation commands (with `sdd:` prefix). If you installed via direct clone, omit the `sdd:` prefix (e.g., use `/init` instead of `/sdd:init`).
 
 ### Quick Start Workflow
 
@@ -207,11 +259,14 @@ Want to submit a plugin to this marketplace? Please open an issue with:
 
 ### For SDD Plugin Issues
 
-- [Report SDD Issues](https://github.com/ankushdixit/claude-plugins/issues)
-- [View SDD Documentation](https://github.com/ankushdixit/claude-plugins/tree/main/sdd#readme)
+Report issues and view documentation at the standalone SDD repository:
+- [Report SDD Issues](https://github.com/ankushdixit/sdd/issues)
+- [View SDD Documentation](https://github.com/ankushdixit/sdd#readme)
+- [SDD Discussions](https://github.com/ankushdixit/sdd/discussions)
 
 ### For Marketplace Issues
 
+For issues specific to the marketplace or plugin installation:
 - [Report Marketplace Issues](https://github.com/ankushdixit/claude-plugins/issues)
 
 ---
