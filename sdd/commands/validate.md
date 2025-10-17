@@ -7,7 +7,7 @@ description: Validate current session meets quality standards without ending it
 Run the validation script to check quality standards:
 
 ```bash
-python3 scripts/session_validate.py
+python3 ~/.claude/plugins/marketplaces/claude-plugins/sdd/sdd_cli.py validate
 ```
 
 The validation checks:
