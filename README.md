@@ -268,6 +268,45 @@ To submit a different plugin to this marketplace, please open an issue with:
 
 ---
 
+## Repository Sync & Maintenance
+
+### Automated Sync from Main SDD Repo
+
+**This repository is automatically synced** from the main SDD repository at [github.com/ankushdixit/sdd](https://github.com/ankushdixit/sdd).
+
+#### How It Works
+
+1. **Automatic Sync**: Every push to the `main` branch of the SDD repository triggers a GitHub Actions workflow
+2. **File Sync**: The following files/directories are automatically synced:
+   - `sdd_cli.py` → `sdd/sdd_cli.py`
+   - `scripts/` → `sdd/scripts/`
+   - `templates/` → `sdd/templates/`
+   - `hooks/` → `sdd/hooks/`
+   - `.claude/commands/` → `sdd/commands/`
+3. **Version Sync**: Version is automatically extracted from `pyproject.toml` and updated in `.claude-plugin/plugin.json`
+4. **Preserved Files**: The following files are maintained separately in this repo and NOT synced:
+   - `README.md` (this marketplace README)
+   - `CONTRIBUTING.md` (directs to main SDD repo)
+   - `LICENSE`, `SECURITY.md` (static policy files)
+
+#### Why This Approach?
+
+- ✅ **Single Source of Truth**: All development happens in the main SDD repo
+- ✅ **Zero Manual Maintenance**: No need to manually copy files or update versions
+- ✅ **Always Up-to-Date**: Plugin marketplace stays in sync with latest changes
+- ✅ **Preserved Marketplace Context**: Marketplace-specific files remain unchanged
+
+#### For Maintainers
+
+The sync is handled by:
+- **Workflow**: `.github/workflows/sync-plugin.yml` (in main SDD repo)
+- **Script**: `scripts/sync_to_plugin.py` (in main SDD repo)
+- **Secret**: `PLUGIN_REPO_TOKEN` (GitHub PAT with repo access)
+
+Manual sync can be triggered via GitHub Actions workflow dispatch in the main SDD repository.
+
+---
+
 ## Support
 
 ### For SDD Plugin Issues
