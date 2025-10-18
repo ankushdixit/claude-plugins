@@ -5,16 +5,32 @@ Enhanced with full project context loading.
 """
 
 import json
-import sys
 import subprocess
-from pathlib import Path
+import sys
 from datetime import datetime
+from pathlib import Path
+
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from scripts.logging_config import get_logger
+
+logger = get_logger(__name__)
+
+# Import spec validator for validation warnings
+try:
+    from spec_validator import format_validation_report, validate_spec_file
+except ImportError:
+    # Gracefully handle if spec_validator not available
+    validate_spec_file = None
+    format_validation_report = None
 
 
 def load_work_items():
     """Load work items from tracking file."""
     work_items_file = Path(".session/tracking/work_items.json")
+    logger.debug("Loading work items from: %s", work_items_file)
     if not work_items_file.exists():
+        logger.warning("Work items file not found: %s", work_items_file)
         return {"work_items": {}}
     with open(work_items_file) as f:
         return json.load(f)
@@ -117,9 +133,7 @@ def load_milestone_context(work_item):
 
     # Calculate progress
     items = data.get("work_items", {})
-    milestone_items = [
-        item for item in items.values() if item.get("milestone") == milestone_name
-    ]
+    milestone_items = [item for item in items.values() if item.get("milestone") == milestone_name]
 
     total = len(milestone_items)
     completed = sum(1 for item in milestone_items if item["status"] == "completed")
@@ -164,10 +178,17 @@ def load_current_tree():
     """Load current project structure."""
     tree_file = Path(".session/tracking/tree.txt")
     if tree_file.exists():
-        # Return first 50 lines (preview)
-        lines = tree_file.read_text().split("\n")
-        return "\n".join(lines[:50])
+        # Return full tree
+        return tree_file.read_text()
     return "Tree not yet generated"
+
+
+def load_work_item_spec(work_item_id: str) -> str:
+    """Load work item specification file."""
+    spec_file = Path(".session/specs") / f"{work_item_id}.md"
+    if spec_file.exists():
+        return spec_file.read_text()
+    return f"Specification file not found: .session/specs/{work_item_id}.md"
 
 
 def validate_environment():
@@ -179,9 +200,7 @@ def validate_environment():
 
     # Check git
     try:
-        result = subprocess.run(
-            ["git", "--version"], capture_output=True, text=True, timeout=5
-        )
+        result = subprocess.run(["git", "--version"], capture_output=True, text=True, timeout=5)
         if result.returncode == 0:
             checks.append(f"Git: {result.stdout.strip()}")
         else:
@@ -200,9 +219,7 @@ def check_git_status():
         if git_module_path.exists():
             import importlib.util
 
-            spec = importlib.util.spec_from_file_location(
-                "git_integration", git_module_path
-            )
+            spec = importlib.util.spec_from_file_location("git_integration", git_module_path)
             git_module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(git_module)
 
@@ -224,8 +241,16 @@ def generate_briefing(item_id, item, learnings_data):
     project_docs = load_project_docs()
     current_stack = load_current_stack()
     current_tree = load_current_tree()
+    work_item_spec = load_work_item_spec(item_id)
     env_checks = validate_environment()
     git_status = check_git_status()
+
+    # Validate spec completeness (Phase 5.7.5)
+    spec_validation_warning = None
+    if validate_spec_file is not None:
+        is_valid, errors = validate_spec_file(item_id, item["type"])
+        if not is_valid:
+            spec_validation_warning = format_validation_report(item_id, item["type"], errors)
 
     # Start briefing
     briefing = f"""# Session Briefing: {item["title"]}
@@ -252,29 +277,36 @@ def generate_briefing(item_id, item, learnings_data):
     # Project context section
     briefing += "\n## Project Context\n\n"
 
-    # Vision (if available)
+    # Vision (if available) - full content
     if "vision.md" in project_docs:
-        vision_preview = project_docs["vision.md"][:500]
-        briefing += f"### Vision\n{vision_preview}...\n\n"
+        briefing += f"### Vision\n{project_docs['vision.md']}\n\n"
 
-    # Architecture (if available)
+    # Architecture (if available) - full content
     if "architecture.md" in project_docs:
-        arch_preview = project_docs["architecture.md"][:500]
-        briefing += f"### Architecture\n{arch_preview}...\n\n"
+        briefing += f"### Architecture\n{project_docs['architecture.md']}\n\n"
 
     # Current stack
     briefing += f"### Current Stack\n```\n{current_stack}\n```\n\n"
 
-    # Project structure preview
-    briefing += f"### Project Structure (Preview)\n```\n{current_tree}\n```\n\n"
+    # Project structure - full tree
+    briefing += f"### Project Structure\n```\n{current_tree}\n```\n\n"
 
-    # Work item details
-    briefing += f"""## Work Item Details
+    # Spec validation warning (if spec is incomplete)
+    if spec_validation_warning:
+        briefing += f"""## ⚠️ Specification Validation Warning
 
-### Objective
-{item.get("rationale", "No rationale provided")}
+{spec_validation_warning}
 
-### Dependencies
+**Note:** Please review and complete the specification before proceeding with implementation.
+
+"""
+
+    # Work item specification - full content
+    briefing += f"""## Work Item Specification
+
+{work_item_spec}
+
+## Dependencies
 """
 
     # Show dependency status
@@ -303,52 +335,15 @@ Progress: {milestone_context["progress"]}% ({milestone_context["completed_items"
         for related_item in milestone_context["milestone_items"]:
             if related_item["id"] != item.get("id"):
                 status_icon = "✓" if related_item["status"] == "completed" else "○"
-                briefing += (
-                    f"- {status_icon} {related_item['id']} - {related_item['title']}\n"
-                )
+                briefing += f"- {status_icon} {related_item['id']} - {related_item['title']}\n"
         briefing += "\n"
-
-    briefing += "## Implementation Checklist\n\n"
-
-    # Acceptance criteria become checklist
-    if item.get("acceptance_criteria"):
-        for criterion in item["acceptance_criteria"]:
-            briefing += f"- [ ] {criterion}\n"
-    else:
-        briefing += "- [ ] Implement functionality\n"
-        briefing += "- [ ] Write tests\n"
-        briefing += "- [ ] Update documentation\n"
 
     # Relevant learnings
     relevant_learnings = get_relevant_learnings(learnings_data, item)
     if relevant_learnings:
         briefing += "\n## Relevant Learnings\n\n"
         for learning in relevant_learnings:
-            briefing += (
-                f"**{learning.get('category', 'general')}:** {learning['content']}\n\n"
-            )
-
-    # Validation requirements
-    briefing += "\n## Validation Requirements\n\n"
-    criteria = item.get("validation_criteria", {})
-    if criteria.get("tests_pass", True):
-        briefing += "- Tests must pass\n"
-    if criteria.get("coverage_min"):
-        briefing += f"- Coverage >= {criteria['coverage_min']}%\n"
-    if criteria.get("linting_pass", True):
-        briefing += "- Linting must pass\n"
-    if criteria.get("documentation_required", False):
-        briefing += "- Documentation must be updated\n"
-
-    # Add integration test specific briefing
-    integration_briefing = generate_integration_test_briefing(item)
-    if integration_briefing:
-        briefing += integration_briefing
-
-    # Add deployment specific briefing
-    deployment_briefing = generate_deployment_briefing(item)
-    if deployment_briefing:
-        briefing += deployment_briefing
+            briefing += f"**{learning.get('category', 'general')}:** {learning['content']}\n\n"
 
     return briefing
 
@@ -358,7 +353,7 @@ def check_command_exists(command: str) -> bool:
     try:
         subprocess.run([command, "--version"], capture_output=True, timeout=5)
         return True
-    except:
+    except Exception:
         return False
 
 
@@ -398,9 +393,7 @@ def generate_integration_test_briefing(work_item: dict) -> str:
     if scenarios:
         briefing += f"**Test Scenarios ({len(scenarios)} total):**\n"
         for i, scenario in enumerate(scenarios[:5], 1):  # Show first 5
-            scenario_name = scenario.get(
-                "name", scenario.get("description", f"Scenario {i}")
-            )
+            scenario_name = scenario.get("name", scenario.get("description", f"Scenario {i}"))
             briefing += f"{i}. {scenario_name}\n"
 
         if len(scenarios) > 5:
@@ -439,14 +432,10 @@ def generate_integration_test_briefing(work_item: dict) -> str:
 
     # Check Docker Compose
     compose_available = check_command_exists("docker-compose")
-    briefing += (
-        f"- Docker Compose: {'✓ Available' if compose_available else '✗ Not found'}\n"
-    )
+    briefing += f"- Docker Compose: {'✓ Available' if compose_available else '✗ Not found'}\n"
 
     # Check compose file
-    compose_file = env_requirements.get(
-        "compose_file", "docker-compose.integration.yml"
-    )
+    compose_file = env_requirements.get("compose_file", "docker-compose.integration.yml")
     compose_exists = Path(compose_file).exists()
     briefing += f"- Compose file ({compose_file}): {'✓ Found' if compose_exists else '✗ Missing'}\n"
 
@@ -477,21 +466,24 @@ def generate_deployment_briefing(work_item: dict) -> str:
 
     # Parse deployment scope
     briefing.append("\n**Deployment Scope:**")
-    # TODO: Parse from spec - for now show placeholder
+    # NOTE: Framework stub - Parse deployment scope from spec using spec_parser.py
+    # Extract "## Deployment Scope" section and parse Application/Environment/Version fields
     briefing.append("  Application: [parse from spec]")
     briefing.append("  Environment: [parse from spec]")
     briefing.append("  Version: [parse from spec]")
 
     # Parse deployment procedure
     briefing.append("\n**Deployment Procedure:**")
-    # TODO: Parse steps from spec
+    # NOTE: Framework stub - Parse deployment steps from spec using spec_parser.py
+    # Extract "## Deployment Steps" section and count pre/during/post steps
     briefing.append("  Pre-deployment: [X steps]")
     briefing.append("  Deployment: [Y steps]")
     briefing.append("  Post-deployment: [Z steps]")
 
     # Parse rollback procedure
     briefing.append("\n**Rollback Procedure:**")
-    # TODO: Parse from spec
+    # NOTE: Framework stub - Parse rollback details from spec using spec_parser.py
+    # Extract "## Rollback Procedure" section for triggers and time estimates
     has_rollback = "rollback procedure" in spec.lower()
     briefing.append(f"  Rollback triggers defined: {'Yes' if has_rollback else 'No'}")
     briefing.append("  Estimated rollback time: [X minutes]")
@@ -504,13 +496,13 @@ def generate_deployment_briefing(work_item: dict) -> str:
         sys.path.insert(0, str(Path(__file__).parent))
         from environment_validator import EnvironmentValidator
 
-        environment = "staging"  # TODO: Parse from spec
+        # NOTE: Framework stub - Parse target environment from spec using spec_parser.py
+        # Extract from "## Deployment Scope" or "## Environment" section
+        environment = "staging"  # Default fallback
         validator = EnvironmentValidator(environment)
         passed, results = validator.validate_all()
 
-        briefing.append(
-            f"  Environment validation: {'✓ PASSED' if passed else '✗ FAILED'}"
-        )
+        briefing.append(f"  Environment validation: {'✓ PASSED' if passed else '✗ FAILED'}")
         for validation in results.get("validations", []):
             status = "✓" if validation["passed"] else "✗"
             briefing.append(f"    {status} {validation['name']}")
@@ -524,9 +516,12 @@ def generate_deployment_briefing(work_item: dict) -> str:
 
 def main():
     """Main entry point."""
+    logger.info("Starting session briefing generation")
+
     # Ensure .session directory exists
     session_dir = Path(".session")
     if not session_dir.exists():
+        logger.error(".session directory not found")
         print("Error: .session directory not found. Run project initialization first.")
         return 1
 
@@ -538,9 +533,11 @@ def main():
     item_id, item = get_next_work_item(work_items_data)
 
     if not item_id:
+        logger.warning("No available work items found")
         print("No available work items. All dependencies must be satisfied first.")
         return 1
 
+    logger.info("Generating briefing for work item: %s", item_id)
     # Generate briefing
     briefing = generate_briefing(item_id, item, learnings_data)
 
@@ -564,9 +561,7 @@ def main():
         if git_module_path.exists():
             import importlib.util
 
-            spec = importlib.util.spec_from_file_location(
-                "git_integration", git_module_path
-            )
+            spec = importlib.util.spec_from_file_location("git_integration", git_module_path)
             git_module = importlib.util.module_from_spec(spec)
             spec.loader.exec_module(git_module)
 

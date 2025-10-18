@@ -194,6 +194,18 @@ def initialize_tracking_files():
     (session_dir / "config.json").write_text(json.dumps(config_data, indent=2))
     print("✓ Created config.json")
 
+    # Copy config schema file
+    schema_source = Path(__file__).parent.parent / "templates" / "config.schema.json"
+    schema_dest = session_dir / "config.schema.json"
+
+    if schema_source.exists() and not schema_dest.exists():
+        shutil.copy(schema_source, schema_dest)
+        print("✓ Created config.schema.json")
+    elif not schema_source.exists():
+        print(
+            "⚠️  config.schema.json not found in repository, skipping (validation will be disabled)"
+        )
+
     return True
 
 
@@ -203,18 +215,14 @@ def run_initial_scans():
 
     # Run generate_stack.py
     try:
-        subprocess.run(
-            ["python", "scripts/generate_stack.py"], check=True, capture_output=True
-        )
+        subprocess.run(["python", "scripts/generate_stack.py"], check=True, capture_output=True)
         print("✓ Generated stack.txt")
     except subprocess.CalledProcessError:
         print("⚠️  Could not generate stack.txt (will be generated on first session)")
 
     # Run generate_tree.py
     try:
-        subprocess.run(
-            ["python", "scripts/generate_tree.py"], check=True, capture_output=True
-        )
+        subprocess.run(["python", "scripts/generate_tree.py"], check=True, capture_output=True)
         print("✓ Generated tree.txt")
     except subprocess.CalledProcessError:
         print("⚠️  Could not generate tree.txt (will be generated on first session)")

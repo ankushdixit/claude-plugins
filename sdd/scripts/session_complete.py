@@ -2,18 +2,21 @@
 """
 Complete current session with quality gates and summary generation.
 Enhanced with full tracking updates and git workflow.
+
+Updated in Phase 5.7.3 to use spec_parser for reading work item rationale.
 """
 
 import json
 import subprocess
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 # Add scripts directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
 from quality_gates import QualityGates
+from spec_parser import parse_spec_file
 
 
 def load_status():
@@ -260,9 +263,7 @@ def complete_git_workflow(work_item_id, commit_message):
 
         import importlib.util
 
-        spec = importlib.util.spec_from_file_location(
-            "git_integration", git_module_path
-        )
+        spec = importlib.util.spec_from_file_location("git_integration", git_module_path)
         git_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(git_module)
 
@@ -276,9 +277,7 @@ def complete_git_workflow(work_item_id, commit_message):
         should_merge = work_item["status"] == "completed"
 
         # Complete work item in git
-        result = workflow.complete_work_item(
-            work_item_id, commit_message, merge=should_merge
-        )
+        result = workflow.complete_work_item(work_item_id, commit_message, merge=should_merge)
 
         return result
     except Exception as e:
@@ -286,15 +285,33 @@ def complete_git_workflow(work_item_id, commit_message):
 
 
 def generate_commit_message(status, work_item):
-    """Generate standardized commit message."""
+    """
+    Generate standardized commit message.
+
+    Updated in Phase 5.7.3 to read rationale from spec file instead of
+    deprecated JSON field.
+    """
     session_num = status["current_session"]
     work_type = work_item["type"]
     title = work_item["title"]
+    work_id = work_item.get("id")
 
     message = f"Session {session_num:03d}: {work_type.title()} - {title}\n\n"
 
-    if work_item.get("rationale"):
-        message += f"{work_item['rationale']}\n\n"
+    # Get rationale from spec file
+    try:
+        parsed_spec = parse_spec_file(work_id)
+        rationale = parsed_spec.get("rationale")
+
+        if rationale and rationale.strip():
+            # Trim to first paragraph if too long
+            first_para = rationale.split("\n\n")[0]
+            if len(first_para) > 200:
+                first_para = first_para[:197] + "..."
+            message += f"{first_para}\n\n"
+    except Exception:
+        # If spec file not found or invalid, continue without rationale
+        pass
 
     if work_item["status"] == "completed":
         message += "✅ Work item completed\n"
@@ -403,9 +420,7 @@ def generate_integration_test_summary(work_item: dict, gate_results: dict) -> st
 
             throughput = perf_results.get("load_test", {}).get("throughput", {})
             if throughput:
-                summary += (
-                    f"- Throughput: {throughput.get('requests_per_sec', 'N/A')} req/s\n"
-                )
+                summary += f"- Throughput: {throughput.get('requests_per_sec', 'N/A')} req/s\n"
 
             if perf_results.get("regression_detected"):
                 summary += "- ⚠️  Performance regression detected!\n"
@@ -451,7 +466,8 @@ def generate_deployment_summary(work_item: dict, gate_results: dict) -> str:
     summary.append("=" * 60)
 
     # Deployment execution results
-    # TODO: Parse from deployment_executor results
+    # NOTE: Framework stub - Parse actual results from deployment_executor
+    # When implemented, extract from DeploymentExecutor.get_deployment_log()
     summary.append("\n**Deployment Execution:**")
     summary.append("  Status: [Success/Failed]")
     summary.append("  Steps completed: [X/Y]")
@@ -471,7 +487,8 @@ def generate_deployment_summary(work_item: dict, gate_results: dict) -> str:
             summary.append(f"  {status}")
 
     # Rollback status (if applicable)
-    # TODO: Check if rollback was triggered
+    # NOTE: Framework stub - Check deployment results for rollback trigger
+    # When implemented, check DeploymentExecutor results for rollback_triggered flag
     rollback_triggered = False
     if rollback_triggered:
         summary.append("\n⚠️  ROLLBACK TRIGGERED")
@@ -509,9 +526,7 @@ def main():
     gate_results, all_passed, failed_gates = run_quality_gates(work_item)
 
     if not all_passed:
-        print(
-            "\n❌ Required quality gates failed. Fix issues before completing session."
-        )
+        print("\n❌ Required quality gates failed. Fix issues before completing session.")
         print(f"Failed gates: {', '.join(failed_gates)}")
         return 1
 

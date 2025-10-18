@@ -12,10 +12,8 @@ Full-text search across all learning content, tags, and context.
 Extract the search query from $ARGUMENTS and run:
 
 ```bash
-python3 ~/.claude/plugins/marketplaces/claude-plugins/sdd/sdd_cli.py learn-search "$@"
+python3 scripts/../sdd_cli.py learn-search "$@"
 ```
-
-The query will be passed through `"$@"`.
 
 ### How Search Works
 
@@ -31,17 +29,17 @@ Search is case-insensitive and finds partial matches.
 
 Search for "CORS":
 ```bash
-python3 ~/.claude/plugins/marketplaces/claude-plugins/sdd/sdd_cli.py learn-search "CORS"
+python3 scripts/../sdd_cli.py learn-search "CORS"
 ```
 
 Search for "FastAPI middleware":
 ```bash
-python3 ~/.claude/plugins/marketplaces/claude-plugins/sdd/sdd_cli.py learn-search "FastAPI middleware"
+python3 scripts/../sdd_cli.py learn-search "FastAPI middleware"
 ```
 
 Search for "authentication":
 ```bash
-python3 ~/.claude/plugins/marketplaces/claude-plugins/sdd/sdd_cli.py learn-search "authentication"
+python3 scripts/../sdd_cli.py learn-search "authentication"
 ```
 
 ## Display Format
@@ -61,4 +59,4 @@ Suggest to users:
 - Use specific keywords for better results
 - Try tag names if searching by topic
 - Use category names to narrow results
-- Combine with `/sdd:learn-show --category` for focused browsing
+- Combine with `/learn-show --category` for focused browsing

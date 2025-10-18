@@ -8,7 +8,7 @@ argument-hint: <work_item_id>
 Display detailed information for a specific work item by running:
 
 ```bash
-python3 ~/.claude/plugins/marketplaces/claude-plugins/sdd/sdd_cli.py work-show "$@"
+python3 scripts/../sdd_cli.py work-show "$@"
 ```
 
 The work item ID is provided in `$ARGUMENTS` and passed through `"$@"`.

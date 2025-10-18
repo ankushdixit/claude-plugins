@@ -7,7 +7,7 @@ description: Complete the current development session with quality gates and sum
 Complete the current session by running validation and generating summary:
 
 ```bash
-python3 ~/.claude/plugins/marketplaces/claude-plugins/sdd/sdd_cli.py end
+python3 scripts/../sdd_cli.py end
 ```
 
 This script validates quality gates:

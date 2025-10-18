@@ -7,13 +7,17 @@ Handles creation, listing, showing, updating work items.
 
 import re
 import sys
-from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Optional
+from pathlib import Path
+from typing import Optional
 
 # Add parent directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
+from scripts import spec_parser
 from scripts.file_ops import load_json, save_json
+from scripts.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 
 class WorkItemManager:
@@ -39,16 +43,19 @@ class WorkItemManager:
 
     def create_work_item(self) -> Optional[str]:
         """Interactive work item creation."""
+        logger.info("Starting interactive work item creation")
         print("Creating new work item...\n")
 
         # 1. Select type
         work_type = self._prompt_type()
         if not work_type:
+            logger.debug("Work item creation cancelled - no type selected")
             return None
 
         # 2. Get title
         title = self._prompt_title()
         if not title:
+            logger.debug("Work item creation cancelled - no title provided")
             return None
 
         # 3. Get priority
@@ -59,19 +66,23 @@ class WorkItemManager:
 
         # 5. Generate ID
         work_id = self._generate_id(work_type, title)
+        logger.debug("Generated work item ID: %s", work_id)
 
         # 6. Check for duplicates
         if self._work_item_exists(work_id):
+            logger.error("Work item %s already exists", work_id)
             print(f"❌ Error: Work item {work_id} already exists")
             return None
 
         # 7. Create specification file
         spec_created = self._create_spec_file(work_id, work_type, title)
         if not spec_created:
+            logger.warning("Could not create specification file for %s", work_id)
             print("⚠️  Warning: Could not create specification file")
 
         # 8. Add to work_items.json
         self._add_to_tracking(work_id, work_type, title, priority, dependencies)
+        logger.info("Work item created: %s (type=%s, priority=%s)", work_id, work_type, priority)
 
         # 9. Confirm
         print(f"\n{'=' * 50}")
@@ -99,14 +110,18 @@ class WorkItemManager:
         self, work_type: str, title: str, priority: str = "high", dependencies: str = ""
     ) -> Optional[str]:
         """Create work item from command-line arguments (non-interactive)."""
+        logger.info("Creating work item from args: type=%s, title=%s", work_type, title)
+
         # Validate work type
         if work_type not in self.WORK_ITEM_TYPES:
+            logger.error("Invalid work item type: %s", work_type)
             print(f"❌ Error: Invalid work item type '{work_type}'")
             print(f"Valid types: {', '.join(self.WORK_ITEM_TYPES)}")
             return None
 
         # Validate priority
         if priority not in self.PRIORITIES:
+            logger.warning("Invalid priority '%s', using 'high'", priority)
             print(f"⚠️  Invalid priority '{priority}', using 'high'")
             priority = "high"
 
@@ -114,27 +129,33 @@ class WorkItemManager:
         dep_list = []
         if dependencies:
             dep_list = [d.strip() for d in dependencies.split(",") if d.strip()]
+            logger.debug("Parsed dependencies: %s", dep_list)
             # Validate dependencies exist
             work_items_data = load_json(self.work_items_file)
             for dep_id in dep_list:
                 if dep_id not in work_items_data.get("work_items", {}):
+                    logger.warning("Dependency '%s' does not exist", dep_id)
                     print(f"⚠️  Warning: Dependency '{dep_id}' does not exist")
 
         # Generate ID
         work_id = self._generate_id(work_type, title)
+        logger.debug("Generated work item ID: %s", work_id)
 
         # Check for duplicates
         if self._work_item_exists(work_id):
+            logger.error("Work item %s already exists", work_id)
             print(f"❌ Error: Work item {work_id} already exists")
             return None
 
         # Create specification file
         spec_created = self._create_spec_file(work_id, work_type, title)
         if not spec_created:
+            logger.warning("Could not create specification file for %s", work_id)
             print("⚠️  Warning: Could not create specification file")
 
         # Add to work_items.json
         self._add_to_tracking(work_id, work_type, title, priority, dep_list)
+        logger.info("Work item created: %s (type=%s, priority=%s)", work_id, work_type, priority)
 
         # Confirm
         print(f"\n{'=' * 50}")
@@ -192,9 +213,7 @@ class WorkItemManager:
 
     def _prompt_priority(self) -> str:
         """Prompt for priority."""
-        priority = (
-            input("\nPriority (critical/high/medium/low) [high]: ").strip().lower()
-        )
+        priority = input("\nPriority (critical/high/medium/low) [high]: ").strip().lower()
         if not priority:
             priority = "high"
         if priority not in self.PRIORITIES:
@@ -202,7 +221,7 @@ class WorkItemManager:
             priority = "high"
         return priority
 
-    def _prompt_dependencies(self, work_type: str) -> List[str]:
+    def _prompt_dependencies(self, work_type: str) -> list[str]:
         """Prompt for dependencies."""
         required = work_type in ["integration_test", "deployment"]
 
@@ -294,7 +313,7 @@ class WorkItemManager:
         work_type: str,
         title: str,
         priority: str,
-        dependencies: List[str],
+        dependencies: list[str],
     ):
         """Add work item to work_items.json."""
         # Load existing data
@@ -314,10 +333,6 @@ class WorkItemManager:
             "milestone": "",
             "created_at": datetime.now().isoformat(),
             "sessions": [],
-            "rationale": "",
-            "acceptance_criteria": [],
-            "implementation_paths": [],
-            "test_paths": [],
         }
 
         # Add to data
@@ -328,131 +343,148 @@ class WorkItemManager:
 
     def validate_integration_test(self, work_item: dict) -> tuple[bool, list[str]]:
         """
-        Validate integration test work item.
+        Validate integration test work item by parsing spec file.
+
+        Updated in Phase 5.7.3 to use spec_parser instead of JSON fields.
 
         Returns:
             (is_valid: bool, errors: List[str])
         """
         errors = []
+        work_id = work_item.get("id")
 
-        # Required fields for integration tests
-        required_fields = [
-            "scope",
-            "test_scenarios",
-            "performance_benchmarks",
-            "api_contracts",
-            "environment_requirements",
-        ]
+        # Parse spec file
+        try:
+            parsed_spec = spec_parser.parse_spec_file(work_id)
+        except FileNotFoundError:
+            errors.append(f"Spec file not found: .session/specs/{work_id}.md")
+            return False, errors
+        except ValueError as e:
+            errors.append(f"Invalid spec file: {str(e)}")
+            return False, errors
 
-        for field in required_fields:
-            if not work_item.get(field):
-                errors.append(f"Missing required field for integration test: {field}")
+        # Validate required sections exist and are not empty
+        required_sections = {
+            "scope": "Scope",
+            "test_scenarios": "Test Scenarios",
+            "performance_benchmarks": "Performance Benchmarks",
+            "environment_requirements": "Environment Requirements",
+            "acceptance_criteria": "Acceptance Criteria",
+        }
 
-        # Validate test scenarios structure
-        scenarios = work_item.get("test_scenarios", [])
-        if not scenarios:
+        for field_name, section_name in required_sections.items():
+            value = parsed_spec.get(field_name)
+            if value is None or (isinstance(value, str) and not value.strip()):
+                errors.append(f"Missing required section: {section_name}")
+            elif isinstance(value, list) and len(value) == 0:
+                errors.append(f"Section '{section_name}' is empty")
+
+        # Validate test scenarios - must have at least 1 scenario
+        test_scenarios = parsed_spec.get("test_scenarios", [])
+        if len(test_scenarios) == 0:
             errors.append("At least one test scenario required")
         else:
-            for i, scenario in enumerate(scenarios):
-                if not scenario.get("setup"):
-                    errors.append(f"Scenario {i + 1}: Missing setup section")
-                if not scenario.get("actions"):
-                    errors.append(f"Scenario {i + 1}: Missing actions section")
-                if not scenario.get("expected_results"):
-                    errors.append(f"Scenario {i + 1}: Missing expected results")
+            # Check that each scenario has content
+            for i, scenario in enumerate(test_scenarios):
+                if not scenario.get("content") or not scenario.get("content").strip():
+                    scenario_name = scenario.get("name", f"Scenario {i + 1}")
+                    errors.append(f"{scenario_name}: Missing scenario content")
 
-        # Validate performance benchmarks
-        benchmarks = work_item.get("performance_benchmarks", {})
-        if benchmarks:
-            if not benchmarks.get("response_time"):
-                errors.append(
-                    "Performance benchmarks missing response time requirements"
-                )
-            if not benchmarks.get("throughput"):
-                errors.append("Performance benchmarks missing throughput requirements")
+        # Validate acceptance criteria - should have at least 3 items (per spec validation rules)
+        acceptance_criteria = parsed_spec.get("acceptance_criteria", [])
+        if len(acceptance_criteria) < 3:
+            errors.append(
+                f"Acceptance criteria should have at least 3 items (found {len(acceptance_criteria)})"
+            )
 
-        # Validate API contracts
-        contracts = work_item.get("api_contracts", [])
-        if not contracts:
-            errors.append("Integration tests must specify API contracts")
-        else:
-            for contract in contracts:
-                if not contract.get("contract_file"):
-                    errors.append("API contract missing contract_file reference")
-                if not contract.get("version"):
-                    errors.append("API contract missing version")
-
-        # Validate environment requirements
-        env_reqs = work_item.get("environment_requirements", {})
-        if not env_reqs.get("services_required"):
-            errors.append("Must specify required services for integration test")
-
-        # Check for service dependencies
+        # Check for work item dependencies
         dependencies = work_item.get("dependencies", [])
         if not dependencies:
-            errors.append(
-                "Integration tests must have dependencies (component implementations)"
-            )
+            errors.append("Integration tests must have dependencies (component implementations)")
 
         return len(errors) == 0, errors
 
     def validate_deployment(self, work_item: dict) -> tuple[bool, list[str]]:
         """
-        Validate deployment work item has all required fields.
+        Validate deployment work item by parsing spec file.
+
+        Updated in Phase 5.7.3 to use spec_parser instead of JSON fields.
 
         Returns:
             (is_valid, errors)
         """
         errors = []
-        spec = work_item.get("specification", "")
+        work_id = work_item.get("id")
 
-        # Required sections
-        required_sections = [
-            "deployment scope",
-            "deployment procedure",
-            "environment configuration",
-            "rollback procedure",
-            "smoke tests",
-        ]
+        # Parse spec file
+        try:
+            parsed_spec = spec_parser.parse_spec_file(work_id)
+        except FileNotFoundError:
+            errors.append(f"Spec file not found: .session/specs/{work_id}.md")
+            return False, errors
+        except ValueError as e:
+            errors.append(f"Invalid spec file: {str(e)}")
+            return False, errors
 
-        for section in required_sections:
-            if section.lower() not in spec.lower():
-                errors.append(f"Missing required section: {section}")
+        # Validate required sections exist and are not empty
+        required_sections = {
+            "deployment_scope": "Deployment Scope",
+            "deployment_procedure": "Deployment Procedure",
+            "environment_configuration": "Environment Configuration",
+            "rollback_procedure": "Rollback Procedure",
+            "smoke_tests": "Smoke Tests",
+            "acceptance_criteria": "Acceptance Criteria",
+        }
 
-        # Validate deployment procedure has steps
-        if "deployment procedure" in spec.lower():
-            if "pre-deployment steps" not in spec.lower():
-                errors.append("Missing pre-deployment steps")
-            # Check for "### Deployment Steps" or "### deployment steps" specifically
-            # (not "pre-deployment steps" or "post-deployment steps")
-            if not any(
-                line.strip().lower() in ["### deployment steps", "deployment steps"]
-                for line in spec.split("\n")
+        for field_name, section_name in required_sections.items():
+            value = parsed_spec.get(field_name)
+            if value is None:
+                errors.append(f"Missing required section: {section_name}")
+            elif isinstance(value, str) and not value.strip():
+                errors.append(f"Section '{section_name}' is empty")
+            elif isinstance(value, list) and len(value) == 0:
+                errors.append(f"Section '{section_name}' is empty")
+            elif isinstance(value, dict) and not any(value.values()):
+                errors.append(f"Section '{section_name}' is empty")
+
+        # Validate deployment procedure subsections
+        deployment_proc = parsed_spec.get("deployment_procedure")
+        if deployment_proc:
+            if (
+                not deployment_proc.get("pre_deployment")
+                or not deployment_proc.get("pre_deployment").strip()
+            ):
+                errors.append("Missing pre-deployment checklist/steps")
+            if (
+                not deployment_proc.get("deployment_steps")
+                or not deployment_proc.get("deployment_steps").strip()
             ):
                 errors.append("Missing deployment steps")
-            if "post-deployment steps" not in spec.lower():
+            if (
+                not deployment_proc.get("post_deployment")
+                or not deployment_proc.get("post_deployment").strip()
+            ):
                 errors.append("Missing post-deployment steps")
 
-        # Validate rollback procedure
-        if "rollback procedure" in spec.lower():
-            if "rollback triggers" not in spec.lower():
+        # Validate rollback procedure subsections
+        rollback_proc = parsed_spec.get("rollback_procedure")
+        if rollback_proc:
+            if not rollback_proc.get("triggers") or not rollback_proc.get("triggers").strip():
                 errors.append("Missing rollback triggers")
-            if "rollback steps" not in spec.lower():
+            if not rollback_proc.get("steps") or not rollback_proc.get("steps").strip():
                 errors.append("Missing rollback steps")
 
-        # Validate smoke tests defined
-        if "smoke tests" in spec.lower():
-            if (
-                "critical user flows" not in spec.lower()
-                and "health checks" not in spec.lower()
-            ):
-                errors.append(
-                    "Missing smoke test scenarios (critical user flows or health checks)"
-                )
+        # Validate smoke tests - must have at least 1 test
+        smoke_tests = parsed_spec.get("smoke_tests", [])
+        if len(smoke_tests) == 0:
+            errors.append("At least one smoke test required")
 
-        # Validate environment specified
-        if "target environment" not in spec.lower():
-            errors.append("Missing target environment specification")
+        # Validate acceptance criteria - should have at least 3 items
+        acceptance_criteria = parsed_spec.get("acceptance_criteria", [])
+        if len(acceptance_criteria) < 3:
+            errors.append(
+                f"Acceptance criteria should have at least 3 items (found {len(acceptance_criteria)})"
+            )
 
         return len(errors) == 0, errors
 
@@ -461,7 +493,7 @@ class WorkItemManager:
         status_filter: Optional[str] = None,
         type_filter: Optional[str] = None,
         milestone_filter: Optional[str] = None,
-    ) -> Dict:
+    ) -> dict:
         """List work items with optional filtering."""
         if not self.work_items_file.exists():
             print("No work items found. Create one with /work-item create")
@@ -500,7 +532,7 @@ class WorkItemManager:
 
         return {"items": sorted_items, "count": len(sorted_items)}
 
-    def _is_blocked(self, item: Dict, all_items: Dict) -> bool:
+    def _is_blocked(self, item: dict, all_items: dict) -> bool:
         """Check if work item is blocked by dependencies."""
         if item["status"] != "not_started":
             return False
@@ -517,7 +549,7 @@ class WorkItemManager:
 
         return False
 
-    def _sort_items(self, items: Dict) -> List[Dict]:
+    def _sort_items(self, items: dict) -> list[dict]:
         """Sort items by priority, dependency status, and date."""
         priority_order = {"critical": 0, "high": 1, "medium": 2, "low": 3}
 
@@ -539,7 +571,7 @@ class WorkItemManager:
 
         return items_list
 
-    def _display_items(self, items: List[Dict]):
+    def _display_items(self, items: list[dict]):
         """Display items with color coding and indicators."""
         if not items:
             print("No work items found matching filters.")
@@ -599,9 +631,7 @@ class WorkItemManager:
                     status_str = f"(in progress, session {sessions})"
                 elif item["status"] == "completed":
                     sessions = len(item.get("sessions", []))
-                    status_str = (
-                        f"(completed, {sessions} session{'s' if sessions != 1 else ''})"
-                    )
+                    status_str = f"(completed, {sessions} session{'s' if sessions != 1 else ''})"
                 elif item.get("_ready"):
                     status_str = "(ready to start) ✓"
                 else:
@@ -620,7 +650,7 @@ class WorkItemManager:
         print("  ✓ Ready to start")
         print()
 
-    def _get_status_icon(self, item: Dict) -> str:
+    def _get_status_icon(self, item: dict) -> str:
         """Get status icon for work item."""
         if item["status"] == "completed":
             return "[✓]"
@@ -629,7 +659,7 @@ class WorkItemManager:
         else:
             return "[  ]"
 
-    def show_work_item(self, work_id: str) -> Optional[Dict]:
+    def show_work_item(self, work_id: str) -> Optional[dict]:
         """Display detailed information about a work item."""
         if not self.work_items_file.exists():
             print("No work items found.")
@@ -698,15 +728,11 @@ class WorkItemManager:
             print("Specification:")
             print("-" * 80)
             spec_content = spec_path.read_text()
-            # Show first 30 lines
-            lines = spec_content.split("\n")[:30]
+            # Show first 50 lines (increased to include Acceptance Criteria section)
+            lines = spec_content.split("\n")[:50]
             print("\n".join(lines))
-            if len(spec_content.split("\n")) > 30:
-                print(
-                    "\n[... see full specification in .session/specs/{}.md]".format(
-                        work_id
-                    )
-                )
+            if len(spec_content.split("\n")) > 50:
+                print(f"\n[... see full specification in .session/specs/{work_id}.md]")
             print()
 
         # Next steps
@@ -728,9 +754,7 @@ class WorkItemManager:
 
         print(f"- Update fields: /work-update {work_id}")
         if item.get("milestone"):
-            print(
-                f"- View related items: /work-list --milestone {item['milestone']}"
-            )
+            print(f"- View related items: /work-list --milestone {item['milestone']}")
         print()
 
         return item
@@ -845,9 +869,7 @@ class WorkItemManager:
         choice = input("Your choice: ").strip()
 
         if choice == "1":
-            status = input(
-                "New status (not_started/in_progress/blocked/completed): "
-            ).strip()
+            status = input("New status (not_started/in_progress/blocked/completed): ").strip()
             return self.update_work_item(work_id, status=status)
         elif choice == "2":
             priority = input("New priority (critical/high/medium/low): ").strip()
@@ -865,7 +887,7 @@ class WorkItemManager:
             print("Cancelled.")
             return False
 
-    def get_next_work_item(self) -> Optional[Dict]:
+    def get_next_work_item(self) -> Optional[dict]:
         """Find next work item to start."""
         if not self.work_items_file.exists():
             print("No work items found.")
@@ -875,9 +897,7 @@ class WorkItemManager:
         items = data.get("work_items", {})
 
         # Filter to not_started items
-        not_started = {
-            wid: item for wid, item in items.items() if item["status"] == "not_started"
-        }
+        not_started = {wid: item for wid, item in items.items() if item["status"] == "not_started"}
 
         if not not_started:
             print("No work items available to start.")
@@ -991,7 +1011,7 @@ class WorkItemManager:
         print(f"✓ Created milestone: {name}")
         return True
 
-    def get_milestone_progress(self, milestone_name: str) -> Dict:
+    def get_milestone_progress(self, milestone_name: str) -> dict:
         """Calculate milestone progress."""
         if not self.work_items_file.exists():
             return {"error": "No work items found"}
@@ -1015,12 +1035,8 @@ class WorkItemManager:
 
         total = len(milestone_items)
         completed = sum(1 for item in milestone_items if item["status"] == "completed")
-        in_progress = sum(
-            1 for item in milestone_items if item["status"] == "in_progress"
-        )
-        not_started = sum(
-            1 for item in milestone_items if item["status"] == "not_started"
-        )
+        in_progress = sum(1 for item in milestone_items if item["status"] == "in_progress")
+        not_started = sum(1 for item in milestone_items if item["status"] == "not_started")
         percent = int((completed / total) * 100) if total > 0 else 0
 
         return {
@@ -1077,12 +1093,8 @@ def main():
         help="Work item type (feature, bug, refactor, security, integration_test, deployment)",
     )
     parser.add_argument("--title", help="Work item title")
-    parser.add_argument(
-        "--priority", default="high", help="Priority (critical, high, medium, low)"
-    )
-    parser.add_argument(
-        "--dependencies", default="", help="Comma-separated dependency IDs"
-    )
+    parser.add_argument("--priority", default="high", help="Priority (critical, high, medium, low)")
+    parser.add_argument("--dependencies", default="", help="Comma-separated dependency IDs")
 
     args = parser.parse_args()
 

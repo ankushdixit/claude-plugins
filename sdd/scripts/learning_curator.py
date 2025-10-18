@@ -18,7 +18,12 @@ import sys
 import uuid
 from datetime import datetime
 from pathlib import Path
-from typing import List
+
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from scripts.logging_config import get_logger
+
+logger = get_logger(__name__)
 
 
 class LearningsCurator:
@@ -33,6 +38,7 @@ class LearningsCurator:
 
     def curate(self, dry_run: bool = False) -> None:
         """Curate learnings"""
+        logger.info("Starting learning curation (dry_run=%s)", dry_run)
         print("\n=== Learning Curation ===\n")
 
         # Load existing learnings
@@ -40,14 +46,17 @@ class LearningsCurator:
 
         # Statistics
         initial_count = self._count_all_learnings(learnings)
+        logger.info("Initial learnings count: %d", initial_count)
         print(f"Initial learnings: {initial_count}\n")
 
         # Categorize uncategorized learnings
         categorized = self._categorize_learnings(learnings)
+        logger.info("Categorized %d learnings", categorized)
         print(f"✓ Categorized {categorized} learnings")
 
         # Merge similar learnings
         merged = self._merge_similar_learnings(learnings)
+        logger.info("Merged %d similar learnings", merged)
         print(f"✓ Merged {merged} duplicate learnings")
 
         # Archive old learnings
@@ -240,9 +249,7 @@ class LearningsCurator:
 
         # Score each category
         scores = {
-            "architecture_patterns": self._keyword_score(
-                content, architecture_keywords
-            ),
+            "architecture_patterns": self._keyword_score(content, architecture_keywords),
             "gotchas": self._keyword_score(content, gotcha_keywords),
             "best_practices": self._keyword_score(content, practice_keywords),
             "technical_debt": self._keyword_score(content, debt_keywords),
@@ -375,9 +382,7 @@ class LearningsCurator:
             target["merged_from"] = []
         target["merged_from"].append(source.get("learned_in", "unknown"))
 
-    def _archive_old_learnings(
-        self, learnings: dict, max_age_sessions: int = 50
-    ) -> int:
+    def _archive_old_learnings(self, learnings: dict, max_age_sessions: int = 50) -> int:
         """Archive old, unreferenced learnings"""
         archived_count = 0
         categories = learnings.get("categories", {})
@@ -390,9 +395,7 @@ class LearningsCurator:
 
             for i, learning in enumerate(category_learnings):
                 # Extract session number from learned_in field
-                session_num = self._extract_session_number(
-                    learning.get("learned_in", "")
-                )
+                session_num = self._extract_session_number(learning.get("learned_in", ""))
 
                 # Archive if too old
                 if session_num and current_session - session_num > max_age_sessions:
@@ -485,7 +488,7 @@ class LearningsCurator:
             "similarity_threshold": 0.7,
         }
 
-    def extract_from_session_summary(self, session_file: Path) -> List[dict]:
+    def extract_from_session_summary(self, session_file: Path) -> list[dict]:
         """Extract learnings from session summary file"""
         if not session_file.exists():
             return []
@@ -528,7 +531,7 @@ class LearningsCurator:
 
         return learnings
 
-    def extract_from_git_commits(self, since_session: int = 0) -> List[dict]:
+    def extract_from_git_commits(self, since_session: int = 0) -> list[dict]:
         """Extract learnings from git commit messages"""
         try:
             # Get recent commits
@@ -572,9 +575,7 @@ class LearningsCurator:
         except Exception:
             return []
 
-    def extract_from_code_comments(
-        self, changed_files: List[Path] = None
-    ) -> List[dict]:
+    def extract_from_code_comments(self, changed_files: list[Path] = None) -> list[dict]:
         """Extract learnings from inline code comments"""
         if changed_files is None:
             # Get recently changed files from git
@@ -870,7 +871,7 @@ class LearningsCurator:
 
                 print()
 
-    def get_related_learnings(self, learning_id: str, limit: int = 5) -> List[dict]:
+    def get_related_learnings(self, learning_id: str, limit: int = 5) -> list[dict]:
         """Get similar learnings using similarity algorithms"""
         learnings = self._load_learnings()
         categories = learnings.get("categories", {})
@@ -903,11 +904,9 @@ class LearningsCurator:
                     learning_words = set(learning.get("content", "").lower().split())
                     overlap = len(target_words & learning_words)
                     total = len(target_words | learning_words)
-                    score = int((overlap / total * 100)) if total > 0 else 0
+                    score = int(overlap / total * 100) if total > 0 else 0
 
-                    similarities.append(
-                        (score, {**learning, "category": category_name})
-                    )
+                    similarities.append((score, {**learning, "category": category_name}))
 
         # Sort by score and return top N
         similarities.sort(reverse=True, key=lambda x: x[0])
@@ -949,9 +948,7 @@ class LearningsCurator:
                     session_counts[session_num] = session_counts.get(session_num, 0) + 1
 
         # Top tags
-        stats["top_tags"] = sorted(
-            tag_counts.items(), key=lambda x: x[1], reverse=True
-        )[:10]
+        stats["top_tags"] = sorted(tag_counts.items(), key=lambda x: x[1], reverse=True)[:10]
         stats["by_tag"] = tag_counts
         stats["by_session"] = session_counts
 
@@ -982,9 +979,7 @@ class LearningsCurator:
 
         # Sessions with most learnings
         if stats["by_session"]:
-            top_sessions = sorted(
-                stats["by_session"].items(), key=lambda x: x[1], reverse=True
-            )[:5]
+            top_sessions = sorted(stats["by_session"].items(), key=lambda x: x[1], reverse=True)[:5]
             print("\nSessions with Most Learnings:")
             print("-" * 40)
             for session_num, count in top_sessions:
@@ -1015,9 +1010,7 @@ class LearningsCurator:
         # Display recent sessions
         recent = sorted(by_session.keys(), reverse=True)[:sessions]
 
-        print(
-            f"\n=== Learning Timeline (Last {min(len(recent), sessions)} Sessions) ===\n"
-        )
+        print(f"\n=== Learning Timeline (Last {min(len(recent), sessions)} Sessions) ===\n")
 
         for session in recent:
             session_learnings = by_session[session]
@@ -1063,9 +1056,7 @@ def main():
 
     # Curate command
     curate_parser = subparsers.add_parser("curate", help="Run curation process")
-    curate_parser.add_argument(
-        "--dry-run", action="store_true", help="Show changes without saving"
-    )
+    curate_parser.add_argument("--dry-run", action="store_true", help="Show changes without saving")
 
     # Show learnings command
     show_parser = subparsers.add_parser("show-learnings", help="Show learnings")
@@ -1079,9 +1070,7 @@ def main():
 
     # Add learning command
     add_parser = subparsers.add_parser("add-learning", help="Add a new learning")
-    add_parser.add_argument(
-        "--content", type=str, required=True, help="Learning content"
-    )
+    add_parser.add_argument("--content", type=str, required=True, help="Learning content")
     add_parser.add_argument(
         "--category",
         type=str,
@@ -1127,9 +1116,7 @@ def main():
     if args.command == "curate":
         curator.curate(dry_run=args.dry_run)
     elif args.command == "show-learnings":
-        curator.show_learnings(
-            category=args.category, tag=args.tag, session=args.session
-        )
+        curator.show_learnings(category=args.category, tag=args.tag, session=args.session)
     elif args.command == "search":
         curator.search_learnings(args.query)
     elif args.command == "add-learning":

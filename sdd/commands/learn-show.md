@@ -12,13 +12,8 @@ View captured learnings with optional filtering.
 Parse $ARGUMENTS for filters and run the show-learnings command:
 
 ```bash
-python3 ~/.claude/plugins/marketplaces/claude-plugins/sdd/sdd_cli.py learn-show "$@"
+python3 scripts/../sdd_cli.py learn-show "$@"
 ```
-
-The CLI will automatically parse and forward any filter arguments:
-- `--category <category>`
-- `--tag <tag>`
-- `--session <number>`
 
 ### Filter Options
 
@@ -38,27 +33,27 @@ The CLI will automatically parse and forward any filter arguments:
 
 Show all learnings:
 ```bash
-python3 ~/.claude/plugins/marketplaces/claude-plugins/sdd/sdd_cli.py learn-show
+python3 scripts/../sdd_cli.py learn-show
 ```
 
 Show only gotchas:
 ```bash
-python3 ~/.claude/plugins/marketplaces/claude-plugins/sdd/sdd_cli.py learn-show --category gotchas
+python3 scripts/../sdd_cli.py learn-show --category gotchas
 ```
 
 Show learnings tagged with "fastapi":
 ```bash
-python3 ~/.claude/plugins/marketplaces/claude-plugins/sdd/sdd_cli.py learn-show --tag fastapi
+python3 scripts/../sdd_cli.py learn-show --tag fastapi
 ```
 
 Show learnings from session 5:
 ```bash
-python3 ~/.claude/plugins/marketplaces/claude-plugins/sdd/sdd_cli.py learn-show --session 5
+python3 scripts/../sdd_cli.py learn-show --session 5
 ```
 
 Combine filters (gotchas from session 5):
 ```bash
-python3 ~/.claude/plugins/marketplaces/claude-plugins/sdd/sdd_cli.py learn-show --category gotchas --session 5
+python3 scripts/../sdd_cli.py learn-show --category gotchas --session 5
 ```
 
 ## Display Format

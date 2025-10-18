@@ -8,14 +8,20 @@ Supports:
 - Test data management
 - Parallel test execution
 - Result aggregation
+
+Updated in Phase 5.7.3 to use spec_parser for reading test specifications.
 """
 
-import subprocess
 import json
+import subprocess
+import sys
 import time
-from pathlib import Path
-from typing import Tuple
 from datetime import datetime
+from pathlib import Path
+
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from scripts import spec_parser
 
 
 class IntegrationTestRunner:
@@ -26,11 +32,33 @@ class IntegrationTestRunner:
         Initialize integration test runner.
 
         Args:
-            work_item: Integration test work item with test specifications
+            work_item: Integration test work item (must have 'id' field)
+
+        Raises:
+            ValueError: If spec file not found or invalid
         """
         self.work_item = work_item
-        self.test_scenarios = work_item.get("test_scenarios", [])
-        self.env_requirements = work_item.get("environment_requirements", {})
+        work_id = work_item.get("id")
+
+        if not work_id:
+            raise ValueError("Work item must have 'id' field")
+
+        # Parse spec file to get test scenarios and environment requirements
+        try:
+            parsed_spec = spec_parser.parse_spec_file(work_id)
+        except FileNotFoundError:
+            raise ValueError(f"Spec file not found for work item: {work_id}")
+        except Exception as e:
+            raise ValueError(f"Failed to parse spec file for {work_id}: {str(e)}")
+
+        # Extract test scenarios from parsed spec
+        self.test_scenarios = parsed_spec.get("test_scenarios", [])
+
+        # Parse environment requirements from spec content
+        # The environment_requirements section contains service names and configuration
+        env_req_text = parsed_spec.get("environment_requirements", "")
+        self.env_requirements = self._parse_environment_requirements(env_req_text)
+
         self.results = {
             "scenarios": [],
             "start_time": None,
@@ -41,7 +69,56 @@ class IntegrationTestRunner:
             "skipped": 0,
         }
 
-    def setup_environment(self) -> Tuple[bool, str]:
+    def _parse_environment_requirements(self, env_text: str) -> dict:
+        """
+        Parse environment requirements from spec text.
+
+        Args:
+            env_text: Environment requirements section content
+
+        Returns:
+            Dict with 'services_required' and 'compose_file' keys
+        """
+        if not env_text:
+            return {
+                "services_required": [],
+                "compose_file": "docker-compose.integration.yml",
+            }
+
+        # Extract service names (look for lines with service names)
+        services = []
+        compose_file = "docker-compose.integration.yml"
+
+        for line in env_text.split("\n"):
+            line = line.strip()
+            # Look for service names (simple heuristic: lines with common service names)
+            if any(
+                s in line.lower()
+                for s in [
+                    "postgresql",
+                    "postgres",
+                    "redis",
+                    "mongodb",
+                    "mysql",
+                    "nginx",
+                    "kafka",
+                ]
+            ):
+                # Extract service name and version if present
+                parts = line.split()
+                if parts:
+                    services.append(parts[0].strip("-*•"))
+            # Look for compose file reference
+            if "docker-compose" in line.lower() or "compose" in line.lower():
+                # Try to extract filename
+                words = line.split()
+                for word in words:
+                    if "docker-compose" in word or word.endswith(".yml") or word.endswith(".yaml"):
+                        compose_file = word.strip("`\"':")
+
+        return {"services_required": services, "compose_file": compose_file}
+
+    def setup_environment(self) -> tuple[bool, str]:
         """
         Set up integration test environment.
 
@@ -51,9 +128,7 @@ class IntegrationTestRunner:
         print("Setting up integration test environment...")
 
         # Check if Docker Compose file exists
-        compose_file = self.env_requirements.get(
-            "compose_file", "docker-compose.integration.yml"
-        )
+        compose_file = self.env_requirements.get("compose_file", "docker-compose.integration.yml")
         if not Path(compose_file).exists():
             return False, f"Docker Compose file not found: {compose_file}"
 
@@ -130,7 +205,7 @@ class IntegrationTestRunner:
                         return True
 
                 time.sleep(2)
-            except:
+            except Exception:
                 time.sleep(2)
 
         return False
@@ -155,7 +230,7 @@ class IntegrationTestRunner:
 
         return True
 
-    def run_tests(self, language: str = None) -> Tuple[bool, dict]:
+    def run_tests(self, language: str = None) -> tuple[bool, dict]:
         """
         Execute all integration test scenarios.
 
@@ -275,7 +350,7 @@ class IntegrationTestRunner:
             return "javascript"
         return "python"
 
-    def teardown_environment(self) -> Tuple[bool, str]:
+    def teardown_environment(self) -> tuple[bool, str]:
         """
         Tear down integration test environment.
 
@@ -284,9 +359,7 @@ class IntegrationTestRunner:
         """
         print("\nTearing down integration test environment...")
 
-        compose_file = self.env_requirements.get(
-            "compose_file", "docker-compose.integration.yml"
-        )
+        compose_file = self.env_requirements.get("compose_file", "docker-compose.integration.yml")
 
         try:
             # Stop and remove services
