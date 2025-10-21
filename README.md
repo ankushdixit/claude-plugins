@@ -11,7 +11,7 @@ Official marketplace for Claude Code plugins by Ankush Dixit.
 **Session-Driven Development for Claude Code** - Maintain perfect context across multiple AI coding sessions.
 
 - **Plugin Name**: `sdd`
-- **Version**: 0.5.6
+- **Version**: 0.5.8
 - **Status**: Production-ready ✅
 - **License**: MIT
 
@@ -56,7 +56,25 @@ ankushdixit/claude-plugins
 3. Click **Install**
 4. Restart Claude Code
 
-#### 3. Verify Installation
+#### 3. One-Time Setup (Required for v0.5.8+)
+
+After installing the plugin, run this command once:
+
+```bash
+pip install -e ~/.claude/plugins/marketplaces/claude-plugins/sdd
+```
+
+This installs the `sdd` command globally, enabling all slash commands to work.
+
+#### 4. Verify Installation
+
+```bash
+# Check sdd command is available
+which sdd
+
+# Test the command
+sdd status
+```
 
 Type `/` in Claude Code to see available commands. Try:
 ```
@@ -84,10 +102,17 @@ SDD can be installed in two different ways, depending on your preference:
 - Installing multiple plugins without command conflicts
 
 **Installation:**
-```
+```bash
+# 1. Add marketplace in Claude Code
 /plugin marketplace add ankushdixit/claude-plugins
-# Then install the sdd plugin
+
+# 2. Install the sdd plugin (via UI)
+
+# 3. One-time setup (enables commands)
+pip install -e ~/.claude/plugins/marketplaces/claude-plugins/sdd
 ```
+
+**Note:** The pip install step is required for v0.5.8+ to enable the `sdd` CLI command that powers all slash commands.
 
 ---
 
@@ -193,7 +218,7 @@ Session-Driven Development provides:
 
 ## Plugin Development Status
 
-**Current Version:** 0.5.6 (Production-ready)
+**Current Version:** 0.5.8 (Production-ready)
 
 ### Completed Phases
 
@@ -207,8 +232,10 @@ Session-Driven Development provides:
 | Phase 5 | v0.5 | Quality Gates | ✅ Complete |
 | Phase 5.5 | v0.5.5 | Integration Testing | ✅ Complete |
 | Phase 5.6 | v0.5.6 | Deployment Support | ✅ Complete |
+| Phase 5.7 | v0.5.7 | Spec-First Architecture | ✅ Complete |
+| Phase 5.8 | v0.5.8 | Marketplace Plugin Support | ✅ Complete |
 
-**Test Coverage:** 343/343 tests passing (100%)
+**Test Coverage:** 392/392 tests passing (100%)
 
 ### Upcoming Features
 
