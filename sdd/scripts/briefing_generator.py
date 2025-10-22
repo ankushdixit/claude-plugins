@@ -133,7 +133,11 @@ def load_milestone_context(work_item):
 
     # Calculate progress
     items = data.get("work_items", {})
-    milestone_items = [item for item in items.values() if item.get("milestone") == milestone_name]
+    milestone_items = [
+        {**item, "id": item_id}
+        for item_id, item in items.items()
+        if item.get("milestone") == milestone_name
+    ]
 
     total = len(milestone_items)
     completed = sum(1 for item in milestone_items if item["status"] == "completed")
@@ -398,7 +402,7 @@ Progress: {milestone_context["progress"]}% ({milestone_context["completed_items"
         briefing += "\nRelated work items in this milestone:\n"
         # Show other items in same milestone
         for related_item in milestone_context["milestone_items"]:
-            if related_item["id"] != item.get("id"):
+            if related_item["id"] != item_id:
                 status_icon = "✓" if related_item["status"] == "completed" else "○"
                 briefing += f"- {status_icon} {related_item['id']} - {related_item['title']}\n"
         briefing += "\n"
@@ -611,13 +615,20 @@ def main():
     briefings_dir.mkdir(exist_ok=True)
 
     # Determine session number
-    session_num = (
-        max(
-            [int(f.stem.split("_")[1]) for f in briefings_dir.glob("session_*.md")],
-            default=0,
+    # If work item is already in progress, reuse existing session number
+    if item.get("status") == "in_progress" and item.get("sessions"):
+        session_num = item["sessions"][-1]["session_num"]
+        logger.info("Resuming existing session %d for work item %s", session_num, item_id)
+    else:
+        # Create new session number for new work or restarted work
+        session_num = (
+            max(
+                [int(f.stem.split("_")[1]) for f in briefings_dir.glob("session_*.md")],
+                default=0,
+            )
+            + 1
         )
-        + 1
-    )
+        logger.info("Starting new session %d for work item %s", session_num, item_id)
 
     # Start git workflow for work item
     try:
@@ -662,11 +673,17 @@ def main():
                 {"session_num": session_num, "started_at": datetime.now().isoformat()}
             )
 
-            # Update metadata
+            # Update metadata counters
+            work_items = work_items_data.get("work_items", {})
+            work_items_data["metadata"]["total_items"] = len(work_items)
+            work_items_data["metadata"]["completed"] = sum(
+                1 for item in work_items.values() if item["status"] == "completed"
+            )
             work_items_data["metadata"]["in_progress"] = sum(
-                1
-                for item in work_items_data["work_items"].values()
-                if item["status"] == "in_progress"
+                1 for item in work_items.values() if item["status"] == "in_progress"
+            )
+            work_items_data["metadata"]["blocked"] = sum(
+                1 for item in work_items.values() if item["status"] == "blocked"
             )
             work_items_data["metadata"]["last_updated"] = datetime.now().isoformat()
 
@@ -678,10 +695,17 @@ def main():
             print(f"✓ Work item status updated: {item_id} → in_progress\n")
 
     briefing_file = briefings_dir / f"session_{session_num:03d}_briefing.md"
-    with open(briefing_file, "w") as f:
-        f.write(briefing)
 
-    # Print briefing
+    # Only write briefing file if it doesn't exist (new session)
+    # If resuming, the briefing already exists from when session started
+    if not briefing_file.exists():
+        with open(briefing_file, "w") as f:
+            f.write(briefing)
+        logger.info("Created briefing file: %s", briefing_file)
+    else:
+        logger.info("Reusing existing briefing file: %s", briefing_file)
+
+    # Print briefing (always show it, whether new or existing)
     print(briefing)
 
     # Update status file
