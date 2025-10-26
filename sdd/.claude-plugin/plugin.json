@@ -1,6 +1,6 @@
 {
   "name": "sdd",
-  "version": "0.5.8",
+  "version": "0.6.0",
   "description": "Session-Driven Development for Claude Code - Maintain perfect context across multiple AI coding sessions with quality gates, dependency management, and knowledge accumulation",
   "author": {
     "name": "Ankush Dixit",
