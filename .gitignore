@@ -45,6 +45,18 @@ env/
 htmlcov/
 .tox/
 
+# Linting/Type checking
+.ruff_cache/
+.mypy_cache/
+
+# Python version management
+.python-version
+
 # Project specific
 *.log
 .session/
+
+# Git internals (sometimes created by tools)
+.git/objects/.DS_Store
+.git/logs/.DS_Store
+.git/refs/.DS_Store
