@@ -11,7 +11,7 @@ Official marketplace for Claude Code plugins by Ankush Dixit.
 **Session-Driven Development for Claude Code** - Maintain perfect context across multiple AI coding sessions.
 
 - **Plugin Name**: `sdd`
-- **Version**: 0.5.8
+- **Version**: 0.6.0
 - **Status**: Production-ready ✅
 - **License**: MIT
 
@@ -56,7 +56,7 @@ ankushdixit/claude-plugins
 3. Click **Install**
 4. Restart Claude Code
 
-#### 3. One-Time Setup (Required for v0.5.8+)
+#### 3. One-Time Setup (Required for v0.6.0+)
 
 After installing the plugin, run this command once:
 
@@ -112,7 +112,7 @@ SDD can be installed in two different ways, depending on your preference:
 pip install -e ~/.claude/plugins/marketplaces/claude-plugins/sdd
 ```
 
-**Note:** The pip install step is required for v0.5.8+ to enable the `sdd` CLI command that powers all slash commands.
+**Note:** The pip install step is required for v0.6.0+ to enable the `sdd` CLI command that powers all slash commands.
 
 ---
 
@@ -218,7 +218,7 @@ Session-Driven Development provides:
 
 ## Plugin Development Status
 
-**Current Version:** 0.5.8 (Production-ready)
+**Current Version:** 0.6.0 (Production-ready)
 
 ### Completed Phases
 
@@ -234,8 +234,9 @@ Session-Driven Development provides:
 | Phase 5.6 | v0.5.6 | Deployment Support | ✅ Complete |
 | Phase 5.7 | v0.5.7 | Spec-First Architecture | ✅ Complete |
 | Phase 5.8 | v0.5.8 | Marketplace Plugin Support | ✅ Complete |
+| Phase 5.9 | v0.6.0 | Standard Python src/ Layout | ✅ Complete |
 
-**Test Coverage:** 392/392 tests passing (100%)
+**Test Coverage:** 1416/1416 tests passing (100%)
 
 ### Upcoming Features
 
@@ -305,12 +306,10 @@ To submit a different plugin to this marketplace, please open an issue with:
 
 1. **Automatic Sync**: Every push to the `main` branch of the SDD repository triggers a GitHub Actions workflow
 2. **File Sync**: The following files/directories are automatically synced:
-   - `sdd_cli.py` → `sdd/sdd_cli.py`
-   - `scripts/` → `sdd/scripts/`
-   - `templates/` → `sdd/templates/`
-   - `hooks/` → `sdd/hooks/`
+   - `src/sdd/` → `sdd/src/sdd/` (complete package structure)
    - `.claude/commands/` → `sdd/commands/`
-3. **Version Sync**: Version is automatically extracted from `pyproject.toml` and updated in `.claude-plugin/plugin.json`
+   - `pyproject.toml` → `sdd/pyproject.toml`
+3. **Version Sync**: Version is automatically extracted from `pyproject.toml` and updated in `sdd/.claude-plugin/plugin.json`
 4. **Preserved Files**: The following files are maintained separately in this repo and NOT synced:
    - `README.md` (this marketplace README)
    - `CONTRIBUTING.md` (directs to main SDD repo)
@@ -327,7 +326,7 @@ To submit a different plugin to this marketplace, please open an issue with:
 
 The sync is handled by:
 - **Workflow**: `.github/workflows/sync-plugin.yml` (in main SDD repo)
-- **Script**: `scripts/sync_to_plugin.py` (in main SDD repo)
+- **Script**: `src/sdd/project/sync_plugin.py` (in main SDD repo)
 - **Secret**: `PLUGIN_REPO_TOKEN` (GitHub PAT with repo access)
 
 Manual sync can be triggered via GitHub Actions workflow dispatch in the main SDD repository.
