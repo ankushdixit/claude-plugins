@@ -29,7 +29,7 @@ We will respond within 48 hours.
 
 | Repository | Version | Supported          |
 | ---------- | ------- | ------------------ |
-| SDD Plugin | 0.5.x   | :white_check_mark: |
+| SDD Plugin | 0.7.x   | :white_check_mark: |
 | Marketplace| 1.x     | :white_check_mark: |
 
 ---

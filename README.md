@@ -11,7 +11,7 @@ Official marketplace for Claude Code plugins by Ankush Dixit.
 **Session-Driven Development for Claude Code** - Maintain perfect context across multiple AI coding sessions.
 
 - **Plugin Name**: `sdd`
-- **Version**: 0.6.0
+- **Version**: 0.7.0
 - **Status**: Production-ready ✅
 - **License**: MIT
 
@@ -56,7 +56,7 @@ ankushdixit/claude-plugins
 3. Click **Install**
 4. Restart Claude Code
 
-#### 3. One-Time Setup (Required for v0.6.0+)
+#### 3. One-Time Setup (Required for v0.7.0+)
 
 After installing the plugin, run this command once:
 
@@ -112,7 +112,7 @@ SDD can be installed in two different ways, depending on your preference:
 pip install -e ~/.claude/plugins/marketplaces/claude-plugins/sdd
 ```
 
-**Note:** The pip install step is required for v0.6.0+ to enable the `sdd` CLI command that powers all slash commands.
+**Note:** The pip install step is required for v7.0+ to enable the `sdd` CLI command that powers all slash commands.
 
 ---
 
@@ -218,7 +218,7 @@ Session-Driven Development provides:
 
 ## Plugin Development Status
 
-**Current Version:** 0.6.0 (Production-ready)
+**Current Version:** 0.7.0 (Production-ready)
 
 ### Completed Phases
 
@@ -240,8 +240,7 @@ Session-Driven Development provides:
 
 ### Upcoming Features
 
-- **Phase 6** (v0.6): Spec-Kit Integration - Import work items from specifications
-- **Phase 7** (v0.7+): Advanced Features - Templates, metrics, AI enhancements
+- **Phase 8** (v0.8+): Advanced Features - Templates, metrics, AI enhancements
 
 ---
 
