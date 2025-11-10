@@ -8,13 +8,13 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.constants import SESSION_STATUS_TIMEOUT
-from sdd.core.exceptions import (
+from solokit.core.command_runner import CommandRunner
+from solokit.core.constants import SESSION_STATUS_TIMEOUT
+from solokit.core.exceptions import (
     FileOperationError,
 )
-from sdd.core.logging_config import get_logger
-from sdd.core.types import WorkItemStatus, WorkItemType
+from solokit.core.logging_config import get_logger
+from solokit.core.types import WorkItemStatus, WorkItemType
 
 logger = get_logger(__name__)
 
@@ -309,7 +309,7 @@ class BriefingFormatter:
         # Environment pre-checks
         briefing.append("\n**Pre-Session Environment Checks:**")
         try:
-            from sdd.quality.env_validator import EnvironmentValidator
+            from solokit.quality.env_validator import EnvironmentValidator
 
             # NOTE: Framework stub - Parse target environment from spec using spec_parser.py
             # Extract from "## Deployment Scope" or "## Environment" section
@@ -324,7 +324,7 @@ class BriefingFormatter:
         except ImportError as e:
             logger.warning(
                 "EnvironmentValidator module not available",
-                extra={"error": str(e), "module": "sdd.quality.env_validator"},
+                extra={"error": str(e), "module": "solokit.quality.env_validator"},
             )
             briefing.append("  Environment validation: ✗ Module not available")
         except Exception as e:

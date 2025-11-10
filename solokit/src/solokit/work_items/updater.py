@@ -10,20 +10,20 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from sdd.core.error_handlers import log_errors
-from sdd.core.exceptions import (
+from solokit.core.error_handlers import log_errors
+from solokit.core.exceptions import (
     ErrorCode,
     FileOperationError,
     ValidationError,
     WorkItemNotFoundError,
 )
-from sdd.core.logging_config import get_logger
-from sdd.core.types import Priority, WorkItemStatus
+from solokit.core.logging_config import get_logger
+from solokit.core.types import Priority, WorkItemStatus
 
 if TYPE_CHECKING:
     from .repository import WorkItemRepository
     from .validator import WorkItemValidator
-from sdd.core.output import get_output
+from solokit.core.output import get_output
 
 logger = get_logger(__name__)
 output = get_output()

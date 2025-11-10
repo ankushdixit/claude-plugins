@@ -14,10 +14,10 @@ import argparse
 import json
 from pathlib import Path
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.constants import GIT_QUICK_TIMEOUT, get_config_file, get_session_dir
-from sdd.core.error_handlers import log_errors
-from sdd.core.exceptions import (
+from solokit.core.command_runner import CommandRunner
+from solokit.core.constants import GIT_QUICK_TIMEOUT, get_config_file, get_session_dir
+from solokit.core.error_handlers import log_errors
+from solokit.core.exceptions import (
     ErrorCode,
     FileOperationError,
     GitError,
@@ -26,14 +26,14 @@ from sdd.core.exceptions import (
     SpecValidationError,
     ValidationError,
 )
-from sdd.core.exceptions import (
-    FileNotFoundError as SDDFileNotFoundError,
+from solokit.core.exceptions import (
+    FileNotFoundError as SolokitFileNotFoundError,
 )
-from sdd.core.logging_config import get_logger
-from sdd.core.output import get_output
-from sdd.core.types import WorkItemType
-from sdd.quality.gates import QualityGates
-from sdd.work_items import spec_parser
+from solokit.core.logging_config import get_logger
+from solokit.core.output import get_output
+from solokit.core.types import WorkItemType
+from solokit.quality.gates import QualityGates
+from solokit.work_items import spec_parser
 
 logger = get_logger(__name__)
 output = get_output()
@@ -213,7 +213,7 @@ class SessionValidator:
                 message="No current work item is set in session",
                 code=ErrorCode.MISSING_REQUIRED_FIELD,
                 context={"status_file": str(status_file)},
-                remediation="Start a work item with 'sdd start <work_item_id>'",
+                remediation="Start a work item with 'sk start <work_item_id>'",
             )
 
         # Load work items
@@ -222,7 +222,7 @@ class SessionValidator:
             with open(work_items_file) as f:
                 work_items_data = json.load(f)
         except FileNotFoundError as e:
-            raise SDDFileNotFoundError(
+            raise SolokitFileNotFoundError(
                 file_path=str(work_items_file),
                 file_type="work items",
             ) from e
@@ -242,7 +242,7 @@ class SessionValidator:
         spec_file_path = work_item.get("spec_file", f".session/specs/{work_id}.md")
         spec_file = self.project_root / spec_file_path
         if not spec_file.exists():
-            raise SDDFileNotFoundError(
+            raise SolokitFileNotFoundError(
                 file_path=str(spec_file),
                 file_type="spec",
             )
@@ -342,7 +342,7 @@ class SessionValidator:
             dict: Validation results with 'ready' boolean and 'checks' dict
 
         Raises:
-            SDDError: Any SDD exception (GitError, ValidationError, FileOperationError, etc.)
+            SolokitError: Any Solokit exception (GitError, ValidationError, FileOperationError, etc.)
                      that occurs during validation will be raised to the caller
         """
         logger.info("Starting session validation (auto_fix=%s)", auto_fix)
@@ -429,13 +429,13 @@ def main() -> int:
     except (
         SessionNotFoundError,
         ValidationError,
-        SDDFileNotFoundError,
+        SolokitFileNotFoundError,
         FileOperationError,
         SpecValidationError,
         NotAGitRepoError,
         GitError,
     ) as e:
-        # Handle SDD exceptions gracefully
+        # Handle Solokit exceptions gracefully
         output.error(f"Error: {e.message}")
         if e.remediation:
             output.info(f"Remediation: {e.remediation}")

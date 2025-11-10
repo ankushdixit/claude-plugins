@@ -12,9 +12,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from sdd.core.constants import MAX_SPEC_KEYWORDS
-from sdd.core.exceptions import FileOperationError
-from sdd.core.logging_config import get_logger
+from solokit.core.constants import MAX_SPEC_KEYWORDS
+from solokit.core.exceptions import FileOperationError
+from solokit.core.logging_config import get_logger
 
 logger = get_logger(__name__)
 

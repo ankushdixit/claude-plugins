@@ -1,8 +1,8 @@
 """
-Centralized constants and configuration values for SDD
+Centralized constants and configuration values for Solokit
 
 This module contains all magic numbers, default values, paths, and
-configuration constants used throughout the SDD codebase.
+configuration constants used throughout the Solokit codebase.
 """
 
 from pathlib import Path

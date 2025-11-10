@@ -1,4 +1,4 @@
-"""Type definitions for SDD work items.
+"""Type definitions for Solokit work items.
 
 This module provides type-safe enums for work item properties, replacing
 magic strings throughout the codebase. All enums inherit from str for
@@ -13,13 +13,13 @@ from __future__ import annotations
 from enum import Enum
 from typing import Any, TypedDict
 
-from sdd.core.exceptions import ErrorCode, ValidationError
+from solokit.core.exceptions import ErrorCode, ValidationError
 
 
 class WorkItemType(str, Enum):
     """Work item types.
 
-    Defines all valid work item types in the SDD system.
+    Defines all valid work item types in the Solokit system.
     """
 
     FEATURE = "feature"
@@ -53,7 +53,7 @@ class WorkItemType(str, Enum):
 class WorkItemStatus(str, Enum):
     """Work item statuses.
 
-    Defines all valid work item statuses in the SDD system.
+    Defines all valid work item statuses in the Solokit system.
     """
 
     NOT_STARTED = "not_started"
@@ -85,7 +85,7 @@ class WorkItemStatus(str, Enum):
 class Priority(str, Enum):
     """Priority levels.
 
-    Defines all valid priority levels in the SDD system.
+    Defines all valid priority levels in the Solokit system.
     Supports comparison operations for ordering.
     """
 
@@ -281,7 +281,7 @@ class MilestoneDict(TypedDict, total=False):
 
 
 class ConfigDict(TypedDict, total=False):
-    """Typed dictionary for SDD configuration structure.
+    """Typed dictionary for Solokit configuration structure.
 
     Attributes:
         project_name: Name of the project

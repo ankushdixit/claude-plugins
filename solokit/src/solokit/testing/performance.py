@@ -16,15 +16,15 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.constants import (
+from solokit.core.command_runner import CommandRunner
+from solokit.core.constants import (
     GIT_QUICK_TIMEOUT,
     HTTP_REQUEST_TIMEOUT,
     PERFORMANCE_REGRESSION_THRESHOLD,
     PERFORMANCE_TEST_TIMEOUT,
 )
-from sdd.core.error_handlers import convert_subprocess_errors, log_errors
-from sdd.core.exceptions import (
+from solokit.core.error_handlers import convert_subprocess_errors, log_errors
+from solokit.core.exceptions import (
     BenchmarkFailedError,
     LoadTestFailedError,
     PerformanceRegressionError,
@@ -32,8 +32,8 @@ from sdd.core.exceptions import (
     ValidationError,
     WorkItemNotFoundError,
 )
-from sdd.core.file_ops import load_json, save_json
-from sdd.core.output import get_output
+from solokit.core.file_ops import load_json, save_json
+from solokit.core.output import get_output
 
 logger = logging.getLogger(__name__)
 output = get_output()

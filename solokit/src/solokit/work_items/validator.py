@@ -7,15 +7,15 @@ Handles spec validation for integration_test and deployment work items.
 
 from __future__ import annotations
 
-from sdd.core.error_handlers import log_errors
-from sdd.core.exceptions import (
+from solokit.core.error_handlers import log_errors
+from solokit.core.exceptions import (
     ErrorCode,
     FileOperationError,
     SpecValidationError,
     ValidationError,
 )
-from sdd.core.logging_config import get_logger
-from sdd.work_items import spec_parser
+from solokit.core.logging_config import get_logger
+from solokit.work_items import spec_parser
 
 logger = get_logger(__name__)
 

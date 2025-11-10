@@ -5,12 +5,12 @@ Separates presentation concerns from business logic. Business logic raises
 structured exceptions, CLI layer formats them for user display.
 
 Usage:
-    from sdd.core.error_formatter import ErrorFormatter
+    from solokit.core.error_formatter import ErrorFormatter
 
     try:
         # Business logic
         do_something()
-    except SDDError as e:
+    except SolokitError as e:
         ErrorFormatter.print_error(e, verbose=args.verbose)
         sys.exit(e.exit_code)
 """
@@ -18,7 +18,7 @@ Usage:
 import sys
 from typing import Any, Optional
 
-from sdd.core.exceptions import ErrorCategory, SDDError
+from solokit.core.exceptions import ErrorCategory, SolokitError
 
 
 class ErrorFormatter:
@@ -37,20 +37,20 @@ class ErrorFormatter:
             Formatted error message
 
         Example:
-            >>> from sdd.core.exceptions import WorkItemNotFoundError
+            >>> from solokit.core.exceptions import WorkItemNotFoundError
             >>> error = WorkItemNotFoundError("my_feature")
             >>> print(ErrorFormatter.format_error(error))
             🔍 Work item 'my_feature' not found
-            💡 Use 'sdd work-list' to see available work items
+            💡 Use 'sk work-list' to see available work items
         """
-        if isinstance(error, SDDError):
-            return ErrorFormatter._format_sdd_error(error, verbose)
+        if isinstance(error, SolokitError):
+            return ErrorFormatter._format_solokit_error(error, verbose)
         else:
             return ErrorFormatter._format_generic_error(error, verbose)
 
     @staticmethod
-    def _format_sdd_error(error: SDDError, verbose: bool) -> str:
-        """Format SDDError with structured data"""
+    def _format_solokit_error(error: SolokitError, verbose: bool) -> str:
+        """Format SolokitError with structured data"""
         lines = []
 
         # Error symbol based on category
@@ -132,7 +132,7 @@ class ErrorFormatter:
         Example:
             >>> try:
             ...     raise ValidationError("Invalid input")
-            ... except SDDError as e:
+            ... except SolokitError as e:
             ...     ErrorFormatter.print_error(e)
         """
         import logging
@@ -167,12 +167,12 @@ class ErrorFormatter:
             Exit code (0 for success, >0 for errors)
 
         Example:
-            >>> from sdd.core.exceptions import ValidationError, ErrorCode
+            >>> from solokit.core.exceptions import ValidationError, ErrorCode
             >>> error = ValidationError("test", code=ErrorCode.INVALID_WORK_ITEM_ID)
             >>> ErrorFormatter.get_exit_code(error)
             2
         """
-        if isinstance(error, SDDError):
+        if isinstance(error, SolokitError):
             return error.exit_code
         else:
             return 1  # Generic error

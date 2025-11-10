@@ -11,7 +11,7 @@ Output format (one per line):
 work_item_id | type | title | priority
 
 Usage:
-    python -m sdd.work_items.get_next_recommendations [--limit N]
+    python -m solokit.work_items.get_next_recommendations [--limit N]
 """
 
 from __future__ import annotations

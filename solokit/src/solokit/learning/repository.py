@@ -7,11 +7,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from sdd.core.config import get_config_manager
-from sdd.core.error_handlers import log_errors
-from sdd.core.file_ops import load_json, save_json
-from sdd.core.logging_config import get_logger
-from sdd.core.output import get_output
+from solokit.core.config import get_config_manager
+from solokit.core.error_handlers import log_errors
+from solokit.core.file_ops import load_json, save_json
+from solokit.core.logging_config import get_logger
+from solokit.core.output import get_output
 
 logger = get_logger(__name__)
 output = get_output()

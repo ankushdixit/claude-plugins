@@ -2,8 +2,8 @@
 
 from typing import Any, Optional, Protocol
 
-from sdd.core.logging_config import get_logger
-from sdd.core.performance import measure_time
+from solokit.core.logging_config import get_logger
+from solokit.core.performance import measure_time
 
 logger = get_logger(__name__)
 

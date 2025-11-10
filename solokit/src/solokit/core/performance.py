@@ -4,7 +4,7 @@ import time
 from functools import wraps
 from typing import Any, Callable, Optional, TypeVar, cast
 
-from sdd.core.logging_config import get_logger
+from solokit.core.logging_config import get_logger
 
 logger = get_logger(__name__)
 

@@ -1,1 +1,1 @@
-"""Session management for SDD workflow."""
+"""Session management for Solokit workflow."""

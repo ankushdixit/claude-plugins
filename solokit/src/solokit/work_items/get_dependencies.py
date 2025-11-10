@@ -37,7 +37,7 @@ def get_available_dependencies(
     # Find .session directory
     session_dir = _find_session_dir()
     if not session_dir:
-        print("Error: Not in an SDD project (no .session directory found)", file=sys.stderr)
+        print("Error: Not in an Solokit project (no .session directory found)", file=sys.stderr)
         return []
 
     # Load work items
@@ -138,10 +138,10 @@ def main() -> None:
     """CLI entry point for get_dependencies script.
 
     Usage:
-        python -m sdd.work_items.get_dependencies
-        python -m sdd.work_items.get_dependencies --title "My new feature"
-        python -m sdd.work_items.get_dependencies --title "Bug fix" --max 5
-        python -m sdd.work_items.get_dependencies --exclude-status not_started,in_progress
+        python -m solokit.work_items.get_dependencies
+        python -m solokit.work_items.get_dependencies --title "My new feature"
+        python -m solokit.work_items.get_dependencies --title "Bug fix" --max 5
+        python -m solokit.work_items.get_dependencies --exclude-status not_started,in_progress
     """
     import argparse
 

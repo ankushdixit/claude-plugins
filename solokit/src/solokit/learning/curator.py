@@ -18,18 +18,18 @@ import argparse
 from datetime import datetime
 from pathlib import Path
 
-from sdd.core.constants import MAX_LEARNING_AGE_SESSIONS
-from sdd.core.error_handlers import log_errors
-from sdd.core.exceptions import FileNotFoundError as SDDFileNotFoundError
-from sdd.core.logging_config import get_logger
-from sdd.core.output import get_output
-from sdd.learning.archiver import LearningArchiver
-from sdd.learning.categorizer import LearningCategorizer
-from sdd.learning.extractor import LearningExtractor
-from sdd.learning.reporter import LearningReporter
-from sdd.learning.repository import LearningRepository
-from sdd.learning.similarity import LearningSimilarityEngine
-from sdd.learning.validator import LearningValidator
+from solokit.core.constants import MAX_LEARNING_AGE_SESSIONS
+from solokit.core.error_handlers import log_errors
+from solokit.core.exceptions import FileNotFoundError as SolokitFileNotFoundError
+from solokit.core.logging_config import get_logger
+from solokit.core.output import get_output
+from solokit.learning.archiver import LearningArchiver
+from solokit.learning.categorizer import LearningCategorizer
+from solokit.learning.extractor import LearningExtractor
+from solokit.learning.reporter import LearningReporter
+from solokit.learning.repository import LearningRepository
+from solokit.learning.similarity import LearningSimilarityEngine
+from solokit.learning.validator import LearningValidator
 
 logger = get_logger(__name__)
 output = get_output()
@@ -394,7 +394,7 @@ def main() -> None:
     session_dir = project_root / ".session"
 
     if not session_dir.exists():
-        raise SDDFileNotFoundError(file_path=str(session_dir), file_type="session directory")
+        raise SolokitFileNotFoundError(file_path=str(session_dir), file_type="session directory")
 
     curator = LearningsCurator(project_root)
 

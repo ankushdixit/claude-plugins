@@ -1,4 +1,4 @@
-"""Protocol definitions for structural subtyping in SDD.
+"""Protocol definitions for structural subtyping in Solokit.
 
 This module defines protocols (structural types) that allow for
 duck-typing with type safety. Protocols define interfaces that

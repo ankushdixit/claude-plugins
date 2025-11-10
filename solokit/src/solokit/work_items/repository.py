@@ -11,11 +11,11 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, cast
 
-from sdd.core.cache import FileCache
-from sdd.core.file_ops import load_json, save_json
-from sdd.core.logging_config import get_logger
-from sdd.core.performance import measure_time
-from sdd.core.types import WorkItemStatus
+from solokit.core.cache import FileCache
+from solokit.core.file_ops import load_json, save_json
+from solokit.core.logging_config import get_logger
+from solokit.core.performance import measure_time
+from solokit.core.types import WorkItemStatus
 
 logger = get_logger(__name__)
 

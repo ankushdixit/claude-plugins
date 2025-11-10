@@ -13,18 +13,18 @@ import json
 from pathlib import Path
 from typing import Any
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.constants import DEPENDENCY_GRAPH_TIMEOUT
-from sdd.core.error_handlers import convert_file_errors, log_errors
-from sdd.core.exceptions import (
+from solokit.core.command_runner import CommandRunner
+from solokit.core.constants import DEPENDENCY_GRAPH_TIMEOUT
+from solokit.core.error_handlers import convert_file_errors, log_errors
+from solokit.core.exceptions import (
     CircularDependencyError,
     CommandExecutionError,
     FileOperationError,
     ValidationError,
 )
-from sdd.core.logging_config import get_logger
-from sdd.core.output import get_output
-from sdd.core.types import WorkItemStatus
+from solokit.core.logging_config import get_logger
+from solokit.core.output import get_output
+from solokit.core.types import WorkItemStatus
 
 logger = get_logger(__name__)
 output = get_output()
@@ -740,7 +740,7 @@ def main() -> int:
                     Path(args.output).write_text(graph_output)
                     output.info(f"DOT graph saved to {args.output}")
                 except OSError as e:
-                    from sdd.core.exceptions import FileOperationError
+                    from solokit.core.exceptions import FileOperationError
 
                     raise FileOperationError(
                         operation="write",

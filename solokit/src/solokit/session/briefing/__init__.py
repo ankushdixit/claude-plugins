@@ -14,7 +14,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from sdd.core.logging_config import get_logger
+from solokit.core.logging_config import get_logger
 
 from .documentation_loader import DocumentationLoader
 from .formatter import BriefingFormatter
@@ -29,7 +29,7 @@ from .work_item_loader import WorkItemLoader
 # Package-level logger for backward compatibility
 logger = get_logger(__name__)
 
-# Get the parent module (sdd.session)
+# Get the parent module (solokit.session)
 _parent_module_path = Path(__file__).parent.parent
 if str(_parent_module_path) not in sys.path:
     sys.path.insert(0, str(_parent_module_path))
@@ -49,11 +49,11 @@ def main() -> int:
     module_path = Path(__file__).parent.parent / "briefing.py"
 
     # Load the module directly from the file
-    spec = importlib.util.spec_from_file_location("sdd.session._briefing_module", module_path)
+    spec = importlib.util.spec_from_file_location("solokit.session._briefing_module", module_path)
     if spec is None or spec.loader is None:
         raise ImportError(f"Could not load briefing module from {module_path}")
     briefing_module = importlib.util.module_from_spec(spec)
-    sys.modules["sdd.session._briefing_module"] = briefing_module
+    sys.modules["solokit.session._briefing_module"] = briefing_module
     spec.loader.exec_module(briefing_module)
 
     # Call the main function from the loaded module

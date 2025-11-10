@@ -11,8 +11,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from sdd.core.logging_config import get_logger
-from sdd.core.types import Priority, WorkItemStatus
+from solokit.core.logging_config import get_logger
+from solokit.core.types import Priority, WorkItemStatus
 
 logger = get_logger(__name__)
 

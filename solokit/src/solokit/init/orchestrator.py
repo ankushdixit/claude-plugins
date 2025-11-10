@@ -11,18 +11,18 @@ import logging
 from pathlib import Path
 from typing import Literal, Optional, cast
 
-from sdd.init.dependency_installer import install_dependencies
-from sdd.init.docs_structure import create_docs_structure
-from sdd.init.env_generator import generate_env_files
-from sdd.init.environment_validator import validate_environment
-from sdd.init.git_hooks_installer import install_git_hooks
-from sdd.init.git_setup import check_blank_project_or_exit, check_or_init_git
-from sdd.init.gitignore_updater import update_gitignore
-from sdd.init.initial_commit import create_initial_commit
-from sdd.init.initial_scans import run_initial_scans
-from sdd.init.readme_generator import generate_readme
-from sdd.init.session_structure import create_session_directories, initialize_tracking_files
-from sdd.init.template_installer import get_template_info, install_template
+from solokit.init.dependency_installer import install_dependencies
+from solokit.init.docs_structure import create_docs_structure
+from solokit.init.env_generator import generate_env_files
+from solokit.init.environment_validator import validate_environment
+from solokit.init.git_hooks_installer import install_git_hooks
+from solokit.init.git_setup import check_blank_project_or_exit, check_or_init_git
+from solokit.init.gitignore_updater import update_gitignore
+from solokit.init.initial_commit import create_initial_commit
+from solokit.init.initial_scans import run_initial_scans
+from solokit.init.readme_generator import generate_readme
+from solokit.init.session_structure import create_session_directories, initialize_tracking_files
+from solokit.init.template_installer import get_template_info, install_template
 
 logger = logging.getLogger(__name__)
 
@@ -213,7 +213,7 @@ def run_template_based_init(
     # =========================================================================
 
     logger.info("=" * 70)
-    logger.info("✅ SDD Template Initialization Complete!")
+    logger.info("✅ Solokit Template Initialization Complete!")
     logger.info("=" * 70)
     logger.info("")
     logger.info(f"📦 Template: {template_info['display_name']}")
@@ -229,8 +229,8 @@ def run_template_based_init(
     logger.info("")
     logger.info("🚀 Next Steps:")
     logger.info("   1. Review README.md for getting started guide")
-    logger.info("   2. Create your first work item: /sdd:work-new")
-    logger.info("   3. Start working: /sdd:start")
+    logger.info("   2. Create your first work item: /sk:work-new")
+    logger.info("   3. Start working: /sk:start")
     logger.info("")
 
     return 0

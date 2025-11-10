@@ -8,19 +8,19 @@ Handles deletion of work items with dependency checking and interactive confirma
 from pathlib import Path
 from typing import Optional
 
-from sdd.core.error_handlers import log_errors
-from sdd.core.exceptions import (
-    FileNotFoundError as SDDFileNotFoundError,
+from solokit.core.error_handlers import log_errors
+from solokit.core.exceptions import (
+    FileNotFoundError as SolokitFileNotFoundError,
 )
-from sdd.core.exceptions import (
+from solokit.core.exceptions import (
     FileOperationError,
     ValidationError,
     WorkItemNotFoundError,
 )
-from sdd.core.file_ops import load_json, save_json
-from sdd.core.logging_config import get_logger
-from sdd.core.output import get_output
-from sdd.core.types import WorkItemStatus
+from solokit.core.file_ops import load_json, save_json
+from solokit.core.logging_config import get_logger
+from solokit.core.output import get_output
+from solokit.core.types import WorkItemStatus
 
 logger = get_logger(__name__)
 output = get_output()
@@ -61,7 +61,7 @@ def delete_work_item(
         True if deletion successful, False if user cancels
 
     Raises:
-        SDDFileNotFoundError: If work_items.json doesn't exist
+        SolokitFileNotFoundError: If work_items.json doesn't exist
         WorkItemNotFoundError: If work item ID doesn't exist
         FileOperationError: If unable to load or save work items file
         ValidationError: If running in non-interactive mode without flags
@@ -76,7 +76,7 @@ def delete_work_item(
     # Check if work items file exists
     if not work_items_file.exists():
         logger.error("Work items file not found")
-        raise SDDFileNotFoundError(file_path=str(work_items_file), file_type="work items")
+        raise SolokitFileNotFoundError(file_path=str(work_items_file), file_type="work items")
 
     # Load work items
     try:
@@ -126,8 +126,8 @@ def delete_work_item(
             message="Must specify either --keep-spec or --delete-spec flag",
             remediation=(
                 "Use command-line flags:\n"
-                "  sdd work-delete <work_item_id> --keep-spec   (delete work item only)\n"
-                "  sdd work-delete <work_item_id> --delete-spec (delete work item and spec)"
+                "  sk work-delete <work_item_id> --keep-spec   (delete work item only)\n"
+                "  sk work-delete <work_item_id> --delete-spec (delete work item and spec)"
             ),
         )
 
@@ -253,7 +253,7 @@ def main() -> int:
         except Exception:  # noqa: BLE001 - This is optional enhancement, don't fail on it
             pass
         return e.exit_code
-    except (SDDFileNotFoundError, FileOperationError, ValidationError) as e:
+    except (SolokitFileNotFoundError, FileOperationError, ValidationError) as e:
         output.info(f"❌ Error: {e.message}")
         if e.remediation:
             output.info(f"\n{e.remediation}")

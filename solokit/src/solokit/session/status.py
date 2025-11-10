@@ -5,18 +5,18 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.constants import SESSION_STATUS_TIMEOUT
-from sdd.core.exceptions import (
+from solokit.core.command_runner import CommandRunner
+from solokit.core.constants import SESSION_STATUS_TIMEOUT
+from solokit.core.exceptions import (
     FileNotFoundError,
     FileOperationError,
     SessionNotFoundError,
     ValidationError,
     WorkItemNotFoundError,
 )
-from sdd.core.logging_config import get_logger
-from sdd.core.output import get_output
-from sdd.core.types import Priority, WorkItemStatus
+from solokit.core.logging_config import get_logger
+from solokit.core.output import get_output
+from solokit.core.types import Priority, WorkItemStatus
 
 logger = get_logger(__name__)
 output = get_output()
@@ -77,7 +77,7 @@ def get_session_status() -> int:
         raise ValidationError(
             message="No active work item in this session",
             context={"status_file": str(status_file)},
-            remediation="Start a work item with 'sdd start <work_item_id>'",
+            remediation="Start a work item with 'sk start <work_item_id>'",
         )
 
     logger.debug("Current work item: %s", work_item_id)

@@ -12,8 +12,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Optional, Union
 
-from sdd.core.error_handlers import log_errors
-from sdd.core.exceptions import (
+from solokit.core.error_handlers import log_errors
+from solokit.core.exceptions import (
     CommandExecutionError,
     TimeoutError,
 )

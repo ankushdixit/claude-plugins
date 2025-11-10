@@ -22,23 +22,23 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.constants import (
+from solokit.core.command_runner import CommandRunner
+from solokit.core.constants import (
     CLEANUP_TIMEOUT,
     DOCKER_COMMAND_TIMEOUT,
     DOCKER_COMPOSE_TIMEOUT,
     FIXTURE_SETUP_TIMEOUT,
     INTEGRATION_TEST_TIMEOUT,
 )
-from sdd.core.exceptions import (
+from solokit.core.exceptions import (
     EnvironmentSetupError,
     FileNotFoundError,
     IntegrationExecutionError,
     TimeoutError,
     ValidationError,
 )
-from sdd.core.output import get_output
-from sdd.work_items import spec_parser
+from solokit.core.output import get_output
+from solokit.work_items import spec_parser
 
 output = get_output()
 logger = logging.getLogger(__name__)
@@ -493,8 +493,8 @@ def main() -> None:
         WorkItemNotFoundError: If work item not found
         Various exceptions from runner methods
     """
-    from sdd.core.exceptions import WorkItemNotFoundError
-    from sdd.core.file_ops import load_json
+    from solokit.core.exceptions import WorkItemNotFoundError
+    from solokit.core.file_ops import load_json
 
     if len(sys.argv) < 2:
         raise ValidationError(

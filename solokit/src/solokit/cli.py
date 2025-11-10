@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """
-SDD CLI Entry Point
+Solokit CLI Entry Point
 
 Universal interface for all Session-Driven Development commands.
 
 Usage:
-    sdd <command> [args...]
+    solokit <command> [args...]
 
 Examples:
-    sdd work-list
-    sdd work-list --status not_started
-    sdd work-show feature_user_auth
-    sdd start
-    sdd learn-search "authentication"
+    sk work-list
+    sk work-list --status not_started
+    sk work-show feature_user_auth
+    sk start
+    sk learn-search "authentication"
 """
 
 from __future__ import annotations
@@ -21,18 +21,18 @@ import argparse
 import sys
 from pathlib import Path
 
-from sdd.core.error_formatter import ErrorFormatter
+from solokit.core.error_formatter import ErrorFormatter
 
 # Import error handling infrastructure
-from sdd.core.exceptions import (
+from solokit.core.exceptions import (
     ErrorCode,
-    SDDError,
+    SolokitError,
     SystemError,
 )
 
 # Import logging configuration
-from sdd.core.logging_config import get_logger, setup_logging
-from sdd.core.output import get_output
+from solokit.core.logging_config import get_logger, setup_logging
+from solokit.core.output import get_output
 
 logger = get_logger(__name__)
 output = get_output()
@@ -46,50 +46,50 @@ output = get_output()
 COMMANDS = {
     # Work Item Management (WorkItemManager class)
     "work-list": (
-        "sdd.work_items.manager",
+        "solokit.work_items.manager",
         "WorkItemManager",
         "list_work_items",
         False,
     ),
     "work-next": (
-        "sdd.work_items.manager",
+        "solokit.work_items.manager",
         "WorkItemManager",
         "get_next_work_item",
         False,
     ),
     "work-show": (
-        "sdd.work_items.manager",
+        "solokit.work_items.manager",
         "WorkItemManager",
         "show_work_item",
         False,
     ),
     "work-update": (
-        "sdd.work_items.manager",
+        "solokit.work_items.manager",
         "WorkItemManager",
         "update_work_item",
         False,
     ),
     "work-new": (
-        "sdd.work_items.manager",
+        "solokit.work_items.manager",
         "WorkItemManager",
         "create_work_item_from_args",
         False,
     ),
-    "work-delete": ("sdd.work_items.delete", None, "main", True),
+    "work-delete": ("solokit.work_items.delete", None, "main", True),
     # Dependency Graph (uses argparse in main)
-    "work-graph": ("sdd.visualization.dependency_graph", None, "main", True),
+    "work-graph": ("solokit.visualization.dependency_graph", None, "main", True),
     # Session Management (standalone main functions)
-    "start": ("sdd.session.briefing", None, "main", True),
-    "end": ("sdd.session.complete", None, "main", True),
-    "status": ("sdd.session.status", None, "get_session_status", False),
-    "validate": ("sdd.session.validate", None, "main", True),
+    "start": ("solokit.session.briefing", None, "main", True),
+    "end": ("solokit.session.complete", None, "main", True),
+    "status": ("solokit.session.status", None, "get_session_status", False),
+    "validate": ("solokit.session.validate", None, "main", True),
     # Learning System (uses argparse in main)
-    "learn": ("sdd.learning.curator", None, "main", True),
-    "learn-show": ("sdd.learning.curator", None, "main", True),
-    "learn-search": ("sdd.learning.curator", None, "main", True),
-    "learn-curate": ("sdd.learning.curator", None, "main", True),
+    "learn": ("solokit.learning.curator", None, "main", True),
+    "learn-show": ("solokit.learning.curator", None, "main", True),
+    "learn-search": ("solokit.learning.curator", None, "main", True),
+    "learn-curate": ("solokit.learning.curator", None, "main", True),
     # Project Initialization
-    "init": ("sdd.project.init", None, "main", True),
+    "init": ("solokit.project.init", None, "main", True),
 }
 
 
@@ -275,8 +275,8 @@ def route_command(command_name: str, args: list[str]) -> int:
             remediation="This appears to be an internal error - please report it",
             cause=e,
         ) from e
-    except SDDError:
-        # Re-raise SDDError exceptions to be caught by main()
+    except SolokitError:
+        # Re-raise SolokitError exceptions to be caught by main()
         raise
     except Exception as e:
         # Wrap unexpected exceptions
@@ -330,7 +330,7 @@ def main() -> int:
 
         # Check if command is provided
         if len(remaining) < 1:
-            output.error("Usage: sdd [--verbose] [--log-file FILE] <command> [args...]")
+            output.error("Usage: solokit [--verbose] [--log-file FILE] <command> [args...]")
             output.error("\nGlobal flags:")
             output.error("  --verbose, -v        Enable verbose (DEBUG) logging")
             output.error("  --log-file FILE      Write logs to file")
@@ -354,8 +354,8 @@ def main() -> int:
         exit_code = route_command(command, command_args)
         return exit_code
 
-    except SDDError as e:
-        # Structured SDD errors with proper formatting
+    except SolokitError as e:
+        # Structured Solokit errors with proper formatting
         ErrorFormatter.print_error(e, verbose=args.verbose if "args" in locals() else False)
         return e.exit_code
 

@@ -7,9 +7,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from sdd.core.constants import MAX_LEARNING_AGE_SESSIONS
-from sdd.core.file_ops import load_json
-from sdd.core.logging_config import get_logger
+from solokit.core.constants import MAX_LEARNING_AGE_SESSIONS
+from solokit.core.file_ops import load_json
+from solokit.core.logging_config import get_logger
 
 logger = get_logger(__name__)
 

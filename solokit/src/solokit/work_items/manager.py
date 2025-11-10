@@ -17,8 +17,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from sdd.core.constants import get_session_dir, get_specs_dir
-from sdd.core.types import Priority, WorkItemType
+from solokit.core.constants import get_session_dir, get_specs_dir
+from solokit.core.types import Priority, WorkItemType
 
 from .creator import WorkItemCreator
 from .milestones import MilestoneManager

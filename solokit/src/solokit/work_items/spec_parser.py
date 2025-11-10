@@ -16,17 +16,17 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from sdd.core.error_handlers import log_errors
-from sdd.core.exceptions import (
+from solokit.core.error_handlers import log_errors
+from solokit.core.exceptions import (
     ErrorCode,
     ValidationError,
 )
-from sdd.core.exceptions import (
-    FileNotFoundError as SDDFileNotFoundError,
+from solokit.core.exceptions import (
+    FileNotFoundError as SolokitFileNotFoundError,
 )
-from sdd.core.logging_config import get_logger
-from sdd.core.output import get_output
-from sdd.core.types import WorkItemType
+from solokit.core.logging_config import get_logger
+from solokit.core.output import get_output
+from solokit.core.types import WorkItemType
 
 logger = get_logger(__name__)
 output = get_output()
@@ -724,7 +724,7 @@ def parse_spec_file(work_item: str | dict[str, Any]) -> dict[str, Any]:
 
     if not spec_path.exists():
         logger.error("Spec file not found: %s", spec_path)
-        raise SDDFileNotFoundError(file_path=str(spec_path), file_type="spec")
+        raise SolokitFileNotFoundError(file_path=str(spec_path), file_type="spec")
 
     try:
         with open(spec_path, encoding="utf-8") as f:

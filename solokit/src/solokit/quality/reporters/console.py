@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from sdd.quality.reporters.base import Reporter
+from solokit.quality.reporters.base import Reporter
 
 
 class ConsoleReporter(Reporter):

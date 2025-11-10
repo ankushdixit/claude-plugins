@@ -28,7 +28,7 @@ def get_dependents(work_item_id: str) -> list[dict[str, Any]]:
     # Find .session directory
     session_dir = _find_session_dir()
     if not session_dir:
-        print("Error: Not in an SDD project (no .session directory found)", file=sys.stderr)
+        print("Error: Not in an Solokit project (no .session directory found)", file=sys.stderr)
         return []
 
     # Load work items
@@ -82,7 +82,7 @@ def main() -> None:
     """CLI entry point for get_dependents script.
 
     Usage:
-        python -m sdd.work_items.get_dependents <work_item_id>
+        python -m solokit.work_items.get_dependents <work_item_id>
     """
     import argparse
 

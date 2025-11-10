@@ -1,5 +1,5 @@
 """
-SDD Init Module
+Solokit Init Module
 
 This module contains deterministic scripts for template-based project initialization.
 Each script handles a specific phase of the initialization process.

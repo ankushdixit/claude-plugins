@@ -8,8 +8,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from sdd.core.exceptions import FileOperationError
-from sdd.core.logging_config import get_logger
+from solokit.core.exceptions import FileOperationError
+from solokit.core.logging_config import get_logger
 
 logger = get_logger(__name__)
 

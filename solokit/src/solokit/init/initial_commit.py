@@ -9,8 +9,8 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.constants import GIT_STANDARD_TIMEOUT
+from solokit.core.command_runner import CommandRunner
+from solokit.core.constants import GIT_STANDARD_TIMEOUT
 
 logger = logging.getLogger(__name__)
 
@@ -53,7 +53,7 @@ def create_commit_message(
     # Format tier name
     tier_name = tier.replace("tier-", "Tier ").replace("-", " ").title()
 
-    message = f"""chore: Initialize project with SDD template system
+    message = f"""chore: Initialize project with Solokit template system
 
 Template: {template_name}
 Quality Tier: {tier_name}

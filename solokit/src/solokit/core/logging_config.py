@@ -1,4 +1,4 @@
-"""Centralized logging configuration for SDD."""
+"""Centralized logging configuration for Solokit."""
 
 import json
 import logging
@@ -94,7 +94,7 @@ def setup_logging(
         log_file: Optional file path for log output
         structured: Use structured JSON logging (default: False)
     """
-    root_logger = logging.getLogger("sdd")
+    root_logger = logging.getLogger("solokit")
     root_logger.setLevel(getattr(logging, level.upper()))
 
     # Remove existing handlers
@@ -129,7 +129,7 @@ def get_logger(name: str) -> logging.Logger:
     Returns:
         Configured logger instance
     """
-    return logging.getLogger(f"sdd.{name}")
+    return logging.getLogger(f"solokit.{name}")
 
 
 class LogContext:

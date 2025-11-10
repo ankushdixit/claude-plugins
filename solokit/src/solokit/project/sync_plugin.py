@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-Sync SDD main repository to claude-plugins marketplace repository.
+Sync Solokit main repository to claude-plugins marketplace repository.
 
-This script automates the process of syncing files from the main SDD repo
+This script automates the process of syncing files from the main Solokit repo
 to the claude-plugins marketplace repo, handling transformations and preserving
 plugin-specific files.
 
@@ -10,10 +10,10 @@ Note: This script is automatically executed by GitHub Actions on every push to m
       See .github/workflows/sync-plugin.yml for the automation workflow.
 
 Usage:
-    python src/sdd/project/sync_plugin.py [--main-repo PATH] [--plugin-repo PATH] [--dry-run]
+    python src/solokit/project/sync_plugin.py [--main-repo PATH] [--plugin-repo PATH] [--dry-run]
 
 Arguments:
-    --main-repo PATH     Path to main SDD repository (default: current directory)
+    --main-repo PATH     Path to main Solokit repository (default: current directory)
     --plugin-repo PATH   Path to claude-plugins repository (required)
     --dry-run           Show what would be synced without making changes
 """
@@ -24,27 +24,27 @@ import shutil
 import sys
 from pathlib import Path
 
-from sdd.core.exceptions import (
+from solokit.core.exceptions import (
     ErrorCode,
     FileOperationError,
     ValidationError,
 )
-from sdd.core.exceptions import (
-    FileNotFoundError as SDDFileNotFoundError,
+from solokit.core.exceptions import (
+    FileNotFoundError as SolokitFileNotFoundError,
 )
-from sdd.core.logging_config import get_logger
+from solokit.core.logging_config import get_logger
 
 logger = get_logger(__name__)
 
 
 class PluginSyncer:
-    """Handles syncing from main SDD repo to claude-plugins marketplace."""
+    """Handles syncing from main Solokit repo to claude-plugins marketplace."""
 
     # Define file mappings: (source_path, dest_path, is_directory)
     FILE_MAPPINGS = [
-        ("src/sdd", "sdd/src/sdd", True),
-        (".claude/commands", "sdd/commands", True),
-        ("pyproject.toml", "sdd/pyproject.toml", False),
+        ("src/solokit", "solokit/src/solokit", True),
+        (".claude/commands", "solokit/commands", True),
+        ("pyproject.toml", "solokit/pyproject.toml", False),
     ]
 
     # Files to preserve in plugin repo (never overwrite)
@@ -52,7 +52,7 @@ class PluginSyncer:
     PRESERVE_FILES = [
         ".claude-plugin/plugin.json",  # Only update version field
         "README.md",  # Plugin has its own marketplace README
-        "CONTRIBUTING.md",  # Directs contributors to main SDD repo
+        "CONTRIBUTING.md",  # Directs contributors to main Solokit repo
         "LICENSE",  # Static license file for marketplace
         "SECURITY.md",  # Static security policy for marketplace
         ".git",  # Git metadata
@@ -64,7 +64,7 @@ class PluginSyncer:
         Initialize the syncer.
 
         Args:
-            main_repo: Path to main SDD repository
+            main_repo: Path to main Solokit repository
             plugin_repo: Path to claude-plugins repository
             dry_run: If True, show what would be done without making changes
         """
@@ -78,14 +78,16 @@ class PluginSyncer:
         Validate that both repositories exist and have expected structure.
 
         Raises:
-            SDDFileNotFoundError: If repository path doesn't exist
+            SolokitFileNotFoundError: If repository path doesn't exist
             ValidationError: If repository is missing expected files/directories
         """
         # Check main repo
         if not self.main_repo.exists():
-            raise SDDFileNotFoundError(file_path=str(self.main_repo), file_type="main repository")
+            raise SolokitFileNotFoundError(
+                file_path=str(self.main_repo), file_type="main repository"
+            )
 
-        main_markers = ["src/sdd/cli.py", "pyproject.toml", ".claude/commands"]
+        main_markers = ["src/solokit/cli.py", "pyproject.toml", ".claude/commands"]
         for marker in main_markers:
             if not (self.main_repo / marker).exists():
                 raise ValidationError(
@@ -96,16 +98,16 @@ class PluginSyncer:
                         "missing_marker": marker,
                         "marker_type": "file" if "." in marker else "directory",
                     },
-                    remediation=f"Ensure {self.main_repo} is a valid SDD repository",
+                    remediation=f"Ensure {self.main_repo} is a valid Solokit repository",
                 )
 
         # Check plugin repo
         if not self.plugin_repo.exists():
-            raise SDDFileNotFoundError(
+            raise SolokitFileNotFoundError(
                 file_path=str(self.plugin_repo), file_type="plugin repository"
             )
 
-        plugin_markers = ["sdd", "sdd/.claude-plugin/plugin.json"]
+        plugin_markers = ["solokit", "solokit/.claude-plugin/plugin.json"]
         for marker in plugin_markers:
             if not (self.plugin_repo / marker).exists():
                 raise ValidationError(
@@ -129,13 +131,15 @@ class PluginSyncer:
             Version string (e.g., "0.5.7")
 
         Raises:
-            SDDFileNotFoundError: If pyproject.toml doesn't exist
+            SolokitFileNotFoundError: If pyproject.toml doesn't exist
             ValidationError: If version field not found in pyproject.toml
             FileOperationError: If file cannot be read
         """
         pyproject_path = self.main_repo / "pyproject.toml"
         if not pyproject_path.exists():
-            raise SDDFileNotFoundError(file_path=str(pyproject_path), file_type="pyproject.toml")
+            raise SolokitFileNotFoundError(
+                file_path=str(pyproject_path), file_type="pyproject.toml"
+            )
 
         try:
             with open(pyproject_path) as f:
@@ -166,7 +170,7 @@ class PluginSyncer:
         Raises:
             FileOperationError: If plugin.json cannot be read, parsed, or written
         """
-        plugin_json_path = self.plugin_repo / "sdd" / ".claude-plugin" / "plugin.json"
+        plugin_json_path = self.plugin_repo / "solokit" / ".claude-plugin" / "plugin.json"
 
         if self.dry_run:
             logger.info(f"[DRY RUN] Would update plugin.json version to {version}")
@@ -335,7 +339,7 @@ class PluginSyncer:
         Execute the sync process.
 
         Raises:
-            SDDFileNotFoundError: If repository paths don't exist
+            SolokitFileNotFoundError: If repository paths don't exist
             ValidationError: If repositories are missing expected files
             FileOperationError: If file operations fail
         """
@@ -378,13 +382,13 @@ def main() -> None:
         5: System/file operation error
     """
     parser = argparse.ArgumentParser(
-        description="Sync SDD main repository to claude-plugins marketplace repository"
+        description="Sync Solokit main repository to claude-plugins marketplace repository"
     )
     parser.add_argument(
         "--main-repo",
         type=Path,
         default=Path.cwd(),
-        help="Path to main SDD repository (default: current directory)",
+        help="Path to main Solokit repository (default: current directory)",
     )
     parser.add_argument(
         "--plugin-repo",
@@ -410,7 +414,7 @@ def main() -> None:
     try:
         syncer.sync()
         sys.exit(0)
-    except SDDFileNotFoundError as e:
+    except SolokitFileNotFoundError as e:
         logger.error(f"File not found: {e.message}")
         if e.remediation:
             logger.error(f"Remediation: {e.remediation}")

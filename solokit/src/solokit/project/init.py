@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Deterministic SDD initialization - transforms any project into working SDD project.
+Deterministic Solokit initialization - transforms any project into working Solokit project.
 Philosophy: Don't check and warn - CREATE and FIX.
 """
 
@@ -12,9 +12,9 @@ import shutil
 import sys
 from pathlib import Path
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.constants import GIT_QUICK_TIMEOUT, GIT_STANDARD_TIMEOUT
-from sdd.core.exceptions import (
+from solokit.core.command_runner import CommandRunner
+from solokit.core.constants import GIT_QUICK_TIMEOUT, GIT_STANDARD_TIMEOUT
+from solokit.core.exceptions import (
     DirectoryNotEmptyError,
     ErrorCode,
     FileOperationError,
@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 # ============================================================================
 # LEGACY INIT FUNCTIONS
 # These functions are kept for backward compatibility with init_project()
-# New template-based init uses modules in src/sdd/init/ instead
+# New template-based init uses modules in src/solokit/init/ instead
 # ============================================================================
 
 
@@ -469,7 +469,7 @@ def install_dependencies(project_type: str) -> None:
 
 def create_smoke_tests(project_type: str) -> None:
     """
-    Create initial smoke tests that validate SDD setup.
+    Create initial smoke tests that validate Solokit setup.
 
     Args:
         project_type: Type of project (typescript, javascript, or python).
@@ -495,8 +495,8 @@ def create_smoke_tests(project_type: str) -> None:
         )
 
     if project_type == "typescript":
-        test_file = test_dir / "sdd-setup.test.ts"
-        template_name = "sdd-setup.test.ts"
+        test_file = test_dir / "solokit-setup.test.ts"
+        template_name = "solokit-setup.test.ts"
         if not test_file.exists():
             template_file = template_dir / template_name
             if template_file.exists():
@@ -514,8 +514,8 @@ def create_smoke_tests(project_type: str) -> None:
             logger.info(f"Found {test_file}")
 
     elif project_type == "javascript":
-        test_file = test_dir / "sdd-setup.test.js"
-        template_name = "sdd-setup.test.js"
+        test_file = test_dir / "solokit-setup.test.js"
+        template_name = "solokit-setup.test.js"
         if not test_file.exists():
             template_file = template_dir / template_name
             if template_file.exists():
@@ -784,7 +784,7 @@ def run_initial_scans() -> None:
     """
     logger.info("\nGenerating project context...")
 
-    # Get SDD installation directory
+    # Get Solokit installation directory
     script_dir = Path(__file__).parent
     runner = CommandRunner(default_timeout=GIT_STANDARD_TIMEOUT)
 
@@ -891,7 +891,7 @@ def ensure_gitignore_entries() -> None:
                     f.write("\n")
 
                 if entries_to_add:
-                    f.write("\n# SDD-related patterns\n")
+                    f.write("\n# Solokit-related patterns\n")
                     for entry in entries_to_add:
                         f.write(f"{entry}\n")
 
@@ -961,7 +961,7 @@ def create_initial_commit(project_root: Path | None = None) -> bool:
         # Create initial commit
         commit_message = """chore: Initialize project with Session-Driven Development
 
-Project initialized with SDD framework including:
+Project initialized with Solokit framework including:
 - Project structure and configuration files
 - Quality gates and testing setup
 - Session tracking infrastructure
@@ -991,7 +991,7 @@ def init_project() -> int:
     LEGACY: Basic initialization function without templates.
 
     This function is deprecated in favor of template-based initialization.
-    Use `sdd init --template=<template> --tier=<tier> --coverage=<coverage>` instead.
+    Use `sk init --template=<template> --tier=<tier> --coverage=<coverage>` instead.
 
     Returns:
         0 on success, 1 if already initialized, or raises exception on critical errors.
@@ -1061,7 +1061,7 @@ def init_project() -> int:
 
     # Success summary
     logger.info("\n" + "=" * 60)
-    logger.info("✅ SDD Initialized Successfully!")
+    logger.info("✅ Solokit Initialized Successfully!")
     logger.info("=" * 60)
 
     logger.info("\n📦 What was created/updated:")
@@ -1075,7 +1075,7 @@ def init_project() -> int:
     logger.info("  ✓ .gitignore updated")
 
     logger.info("\n🚀 Next Step:")
-    logger.info("  /sdd:work-new")
+    logger.info("  /sk:work-new")
     logger.info("")
 
     return 0
@@ -1130,7 +1130,7 @@ def main() -> int:
     # Check if template-based init is requested
     if args.template:
         # Template-based initialization (new flow)
-        from sdd.init.orchestrator import run_template_based_init
+        from solokit.init.orchestrator import run_template_based_init
 
         # Validate required arguments
         if not args.tier:

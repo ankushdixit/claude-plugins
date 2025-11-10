@@ -13,10 +13,10 @@ import time
 from pathlib import Path
 from typing import Any, Union, cast
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.constants import QUALITY_CHECK_LONG_TIMEOUT
-from sdd.core.logging_config import get_logger
-from sdd.quality.checkers.base import CheckResult, QualityChecker
+from solokit.core.command_runner import CommandRunner
+from solokit.core.constants import QUALITY_CHECK_LONG_TIMEOUT
+from solokit.core.logging_config import get_logger
+from solokit.quality.checkers.base import CheckResult, QualityChecker
 
 logger = get_logger(__name__)
 
@@ -82,7 +82,7 @@ class DeploymentChecker(QualityChecker):
 
         # Gate 1: All integration tests must pass
         try:
-            from sdd.quality.checkers.integration import IntegrationChecker
+            from solokit.quality.checkers.integration import IntegrationChecker
 
             integration_config = self.config.get("integration_tests", {"enabled": True})
             integration_checker = IntegrationChecker(
@@ -129,7 +129,7 @@ class DeploymentChecker(QualityChecker):
 
         # Gate 2: Security scans must pass
         try:
-            from sdd.quality.checkers.security import SecurityChecker
+            from solokit.quality.checkers.security import SecurityChecker
 
             security_config = self.config.get("security_scans", {"enabled": True})
             security_checker = SecurityChecker(
@@ -248,7 +248,7 @@ class DeploymentChecker(QualityChecker):
             True if environment validation passes, False otherwise
         """
         try:
-            from sdd.quality.env_validator import EnvironmentValidator
+            from solokit.quality.env_validator import EnvironmentValidator
 
             # Parse target environment from work item
             # Try to extract from spec, fallback to "staging"

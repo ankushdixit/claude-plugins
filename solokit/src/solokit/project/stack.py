@@ -19,9 +19,9 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from sdd.core.error_handlers import log_errors
-from sdd.core.exceptions import FileOperationError
-from sdd.core.output import get_output
+from solokit.core.error_handlers import log_errors
+from solokit.core.exceptions import FileOperationError
+from solokit.core.output import get_output
 
 output = get_output()
 
@@ -79,9 +79,9 @@ class StackGenerator:
 
     def _detect_language_version(self, language: str) -> str:
         """Detect language version from environment."""
-        from sdd.core.command_runner import CommandRunner
-        from sdd.core.constants import STACK_DETECTION_TIMEOUT
-        from sdd.core.error_handlers import safe_execute
+        from solokit.core.command_runner import CommandRunner
+        from solokit.core.constants import STACK_DETECTION_TIMEOUT
+        from solokit.core.error_handlers import safe_execute
 
         version_commands = {
             "python": ["python", "--version"],
@@ -109,7 +109,7 @@ class StackGenerator:
 
     def detect_frameworks(self) -> dict[str, list[str]]:
         """Detect frameworks from imports and config files."""
-        from sdd.core.error_handlers import safe_execute
+        from solokit.core.error_handlers import safe_execute
 
         frameworks: dict[str, list[str]] = {
             "backend": [],
@@ -211,7 +211,7 @@ class StackGenerator:
 
     def detect_mcp_servers(self) -> list[str]:
         """Detect MCP servers in use."""
-        from sdd.core.error_handlers import safe_execute
+        from solokit.core.error_handlers import safe_execute
 
         mcp_servers = []
 
@@ -365,7 +365,7 @@ class StackGenerator:
         self, session_num: int, changes: list[dict[str, Any]], reasoning: str
     ) -> None:
         """Record stack update in stack_updates.json."""
-        from sdd.core.error_handlers import safe_execute
+        from solokit.core.error_handlers import safe_execute
 
         updates: dict[str, Any] = {"updates": []}
 
@@ -408,7 +408,7 @@ def main() -> None:
     """CLI entry point."""
     import argparse
 
-    from sdd.core.output import get_output
+    from solokit.core.output import get_output
 
     output = get_output()
 

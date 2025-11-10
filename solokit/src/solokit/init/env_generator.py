@@ -9,7 +9,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from sdd.core.exceptions import FileOperationError
+from solokit.core.exceptions import FileOperationError
 
 logger = logging.getLogger(__name__)
 

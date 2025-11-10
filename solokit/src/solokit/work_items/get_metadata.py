@@ -79,7 +79,7 @@ def main() -> int:
     """CLI entry point."""
     if len(sys.argv) < 2:
         print(
-            "Usage: python -m sdd.work_items.get_metadata <work_item_id> [--with-deps]",
+            "Usage: python -m solokit.work_items.get_metadata <work_item_id> [--with-deps]",
             file=sys.stderr,
         )
         sys.exit(1)

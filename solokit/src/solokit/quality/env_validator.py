@@ -17,9 +17,9 @@ import logging
 import os
 from typing import Any
 
-from sdd.core.error_handlers import log_errors
-from sdd.core.exceptions import ErrorCode, ValidationError
-from sdd.core.output import get_output
+from solokit.core.error_handlers import log_errors
+from solokit.core.exceptions import ErrorCode, ValidationError
+from solokit.core.output import get_output
 
 output = get_output()
 logger = logging.getLogger(__name__)

@@ -12,13 +12,13 @@ import time
 from pathlib import Path
 from typing import Any, Union, cast
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.constants import DOCKER_COMMAND_TIMEOUT, QUALITY_CHECK_STANDARD_TIMEOUT
-from sdd.core.exceptions import CommandExecutionError
-from sdd.core.logging_config import get_logger
-from sdd.core.types import WorkItemType
-from sdd.quality.checkers.base import CheckResult, QualityChecker
-from sdd.work_items import spec_parser
+from solokit.core.command_runner import CommandRunner
+from solokit.core.constants import DOCKER_COMMAND_TIMEOUT, QUALITY_CHECK_STANDARD_TIMEOUT
+from solokit.core.exceptions import CommandExecutionError
+from solokit.core.logging_config import get_logger
+from solokit.core.types import WorkItemType
+from solokit.quality.checkers.base import CheckResult, QualityChecker
+from solokit.work_items import spec_parser
 
 logger = get_logger(__name__)
 
@@ -85,12 +85,12 @@ class IntegrationChecker(QualityChecker):
         warnings = []
 
         # Import here to avoid circular imports
-        from sdd.core.exceptions import (
+        from solokit.core.exceptions import (
             EnvironmentSetupError,
             IntegrationExecutionError,
             IntegrationTestError,
         )
-        from sdd.testing.integration_runner import IntegrationTestRunner
+        from solokit.testing.integration_runner import IntegrationTestRunner
 
         runner_instance = IntegrationTestRunner(self.work_item)
 
@@ -113,7 +113,7 @@ class IntegrationChecker(QualityChecker):
 
             # 2. Run performance benchmarks
             if self.work_item.get("performance_benchmarks"):
-                from sdd.testing.performance import PerformanceBenchmark
+                from solokit.testing.performance import PerformanceBenchmark
 
                 benchmark = PerformanceBenchmark(self.work_item)
                 benchmarks_passed, benchmark_results = benchmark.run_benchmarks()
@@ -130,7 +130,7 @@ class IntegrationChecker(QualityChecker):
 
             # 3. Validate API contracts
             if self.work_item.get("api_contracts"):
-                from sdd.quality.api_validator import APIContractValidator
+                from solokit.quality.api_validator import APIContractValidator
 
                 validator = APIContractValidator(self.work_item)
                 contracts_passed, contract_results = validator.validate_contracts()

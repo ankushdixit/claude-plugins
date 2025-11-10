@@ -12,16 +12,16 @@ import re
 from pathlib import Path
 from typing import Any, Optional
 
-from sdd.core.error_handlers import log_errors
-from sdd.core.exceptions import (
+from solokit.core.error_handlers import log_errors
+from solokit.core.exceptions import (
     FileNotFoundError,
     FileOperationError,
     SpecValidationError,
 )
-from sdd.core.logging_config import get_logger
-from sdd.core.output import get_output
-from sdd.core.types import WorkItemType
-from sdd.work_items.spec_parser import (
+from solokit.core.logging_config import get_logger
+from solokit.core.output import get_output
+from solokit.core.types import WorkItemType
+from solokit.work_items.spec_parser import (
     extract_checklist,
     extract_subsection,
     parse_section,

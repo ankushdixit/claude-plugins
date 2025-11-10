@@ -13,7 +13,7 @@ if [ -z "$COMMIT_SOURCE" ]; then
 # 📝 CHANGELOG: Update CHANGELOG.md for notable changes
 #    (features, fixes, breaking changes)
 #
-# 💡 LEARNINGS: Add insights that will be auto-extracted during /sdd:end
+# 💡 LEARNINGS: Add insights that will be auto-extracted during /sk:end
 #    LEARNING: <your learning here>
 #
 # Examples:

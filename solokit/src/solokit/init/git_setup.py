@@ -9,9 +9,9 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.constants import GIT_QUICK_TIMEOUT
-from sdd.core.exceptions import ErrorCode, GitError, ValidationError
+from solokit.core.command_runner import CommandRunner
+from solokit.core.constants import GIT_QUICK_TIMEOUT
+from solokit.core.exceptions import ErrorCode, GitError, ValidationError
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +69,7 @@ def is_blank_project(project_root: Path | None = None) -> tuple[bool, list[str]]
             elif file_pattern == "pyproject.toml":
                 blocking_files.append("pyproject.toml (Python project detected)")
             elif file_pattern == ".session":
-                blocking_files.append(".session/ (SDD already initialized)")
+                blocking_files.append(".session/ (Solokit already initialized)")
             else:
                 blocking_files.append(file_pattern)
 
@@ -121,7 +121,7 @@ def check_blank_project_or_exit(project_root: Path | None = None) -> None:
             "Found existing project files:\n"
             + "\n".join(f"  - {f}" for f in blocking_files)
             + "\n\n"
-            "SDD initialization must be run in a blank project directory to avoid conflicts.\n\n"
+            "Solokit initialization must be run in a blank project directory to avoid conflicts.\n\n"
             "Solutions:\n"
             "  1. Create a new directory: mkdir my-project && cd my-project\n"
             "  2. Clone an empty repo: git clone <repo-url> && cd <repo>\n"

@@ -17,21 +17,21 @@ from pathlib import Path
 from typing import Any
 
 # Add scripts directory to path for imports
-from sdd.core.command_runner import CommandRunner
-from sdd.core.constants import (
+from solokit.core.command_runner import CommandRunner
+from solokit.core.constants import (
     GIT_QUICK_TIMEOUT,
     GIT_STANDARD_TIMEOUT,
     SESSION_COMPLETE_TIMEOUT,
 )
-from sdd.core.error_handlers import log_errors
-from sdd.core.exceptions import (
+from solokit.core.error_handlers import log_errors
+from solokit.core.exceptions import (
     FileOperationError,
 )
-from sdd.core.logging_config import get_logger
-from sdd.core.output import get_output
-from sdd.core.types import WorkItemStatus, WorkItemType
-from sdd.quality.gates import QualityGates
-from sdd.work_items.spec_parser import parse_spec_file
+from solokit.core.logging_config import get_logger
+from solokit.core.output import get_output
+from solokit.core.types import WorkItemStatus, WorkItemType
+from solokit.quality.gates import QualityGates
+from solokit.work_items.spec_parser import parse_spec_file
 
 logger = get_logger(__name__)
 output = get_output()
@@ -205,7 +205,7 @@ def update_all_tracking(session_num: int) -> bool:
     """
     logger.info(f"Updating tracking files for session {session_num}")
 
-    # Get SDD installation directory for absolute path resolution
+    # Get Solokit installation directory for absolute path resolution
     script_dir = Path(__file__).parent
     project_dir = script_dir.parent / "project"
 
@@ -282,7 +282,7 @@ def trigger_curation_if_needed(session_num: int) -> None:
         curation failures, as they are non-critical.
     """
     # Use ConfigManager for centralized config management
-    from sdd.core.config import get_config_manager
+    from solokit.core.config import get_config_manager
 
     config_path = Path(".session/config.json")
     config_manager = get_config_manager()
@@ -303,7 +303,7 @@ def trigger_curation_if_needed(session_num: int) -> None:
         output.info(f"{'=' * 50}\n")
 
         try:
-            from sdd.learning.curator import LearningsCurator
+            from solokit.learning.curator import LearningsCurator
 
             curator = LearningsCurator()
             curator.curate(dry_run=False)
@@ -332,7 +332,7 @@ def auto_extract_learnings(session_num: int) -> int:
 
     try:
         # Import learning curator
-        from sdd.learning.curator import LearningsCurator
+        from solokit.learning.curator import LearningsCurator
 
         curator = LearningsCurator()
 
@@ -454,7 +454,7 @@ def complete_git_workflow(
     """
     try:
         # Import git workflow from new location
-        from sdd.git.integration import GitWorkflow
+        from solokit.git.integration import GitWorkflow
 
         workflow = GitWorkflow()
 
@@ -845,7 +845,7 @@ def check_uncommitted_changes() -> bool:
 
         uncommitted = [line for line in result.stdout.split("\n") if line.strip()]
 
-        # Filter out .session/tracking files (they're updated by sdd end)
+        # Filter out .session/tracking files (they're updated by sk end)
         user_changes = [
             line
             for line in uncommitted
@@ -872,7 +872,7 @@ def check_uncommitted_changes() -> bool:
             output.info(f"   ... and {len(user_changes) - 15} more")
 
         output.info("\n" + "=" * 60)
-        output.info("📋 REQUIRED STEPS BEFORE /sdd:end:")
+        output.info("📋 REQUIRED STEPS BEFORE /sk:end:")
         output.info("=" * 60)
         output.info("")
         output.info("1. Review your changes:")
@@ -893,7 +893,7 @@ def check_uncommitted_changes() -> bool:
         output.info("   Co-Authored-By: Claude <noreply@anthropic.com>'")
         output.info("")
         output.info("4. Then run:")
-        output.info("   sdd end")
+        output.info("   sk end")
         output.info("")
         output.info("=" * 60)
 
@@ -909,7 +909,7 @@ def check_uncommitted_changes() -> bool:
         else:
             logger.info("Non-interactive mode: aborting on uncommitted changes")
             output.info("\nNon-interactive mode: exiting")
-            output.info("Please commit your changes and run 'sdd end' again.")
+            output.info("Please commit your changes and run 'sk end' again.")
             return False
 
     except Exception as e:
@@ -932,7 +932,7 @@ def main() -> int:
         FileOperationError: If file operations fail
     """
     # Parse command-line arguments
-    parser = argparse.ArgumentParser(description="Complete SDD session")
+    parser = argparse.ArgumentParser(description="Complete Solokit session")
     parser.add_argument(
         "--learnings-file",
         type=str,
@@ -1017,7 +1017,7 @@ def main() -> int:
         logger.info(f"Processing {len(learnings)} learnings")
         output.info(f"\nProcessing {len(learnings)} learnings...")
         try:
-            from sdd.learning.curator import LearningsCurator
+            from solokit.learning.curator import LearningsCurator
 
             curator = LearningsCurator()
             added_count = 0
@@ -1067,8 +1067,8 @@ def main() -> int:
         output.info("Error: Must specify either --complete or --incomplete flag")
         output.info("")
         output.info("Usage:")
-        output.info("  sdd end --complete              # Mark work item as completed")
-        output.info("  sdd end --incomplete            # Keep work item as in-progress")
+        output.info("  sk end --complete              # Mark work item as completed")
+        output.info("  sk end --incomplete            # Keep work item as in-progress")
         output.info("")
         output.info("For Claude Code users: Use /end slash command for interactive UI")
         return 1

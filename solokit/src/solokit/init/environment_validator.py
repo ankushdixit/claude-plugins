@@ -11,8 +11,8 @@ import shutil
 from pathlib import Path
 from typing import Literal
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.exceptions import ErrorCode, ValidationError
+from solokit.core.command_runner import CommandRunner
+from solokit.core.exceptions import ErrorCode, ValidationError
 
 logger = logging.getLogger(__name__)
 

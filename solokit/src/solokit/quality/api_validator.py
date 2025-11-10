@@ -16,19 +16,19 @@ from typing import Any
 
 import yaml
 
-from sdd.core.error_handlers import convert_file_errors, log_errors
-from sdd.core.exceptions import (
+from solokit.core.error_handlers import convert_file_errors, log_errors
+from solokit.core.exceptions import (
     BreakingChangeError,
     FileOperationError,
     InvalidOpenAPISpecError,
     SchemaValidationError,
     WorkItemNotFoundError,
 )
-from sdd.core.exceptions import (
-    FileNotFoundError as SDDFileNotFoundError,
+from solokit.core.exceptions import (
+    FileNotFoundError as SolokitFileNotFoundError,
 )
-from sdd.core.file_ops import load_json
-from sdd.core.output import get_output
+from solokit.core.file_ops import load_json
+from solokit.core.output import get_output
 
 output = get_output()
 logger = logging.getLogger(__name__)
@@ -82,7 +82,7 @@ class APIContractValidator:
             except (
                 SchemaValidationError,
                 InvalidOpenAPISpecError,
-                SDDFileNotFoundError,
+                SolokitFileNotFoundError,
             ) as e:
                 logger.error(f"Contract validation failed for {contract_file}: {e.message}")
                 all_passed = False
@@ -125,7 +125,7 @@ class APIContractValidator:
         contract_path = Path(contract_file)
 
         if not contract_path.exists():
-            raise SDDFileNotFoundError(file_path=contract_file, file_type="API contract")
+            raise SolokitFileNotFoundError(file_path=contract_file, file_type="API contract")
 
         # Load contract
         try:
@@ -183,7 +183,7 @@ class APIContractValidator:
         try:
             current_spec = self._load_spec(current_file)
             previous_spec = self._load_spec(previous_file)
-        except (SDDFileNotFoundError, SchemaValidationError, FileOperationError) as e:
+        except (SolokitFileNotFoundError, SchemaValidationError, FileOperationError) as e:
             logger.error(f"Failed to load contract specs: {e.message}")
             return [{"type": "load_error", "message": str(e)}]
 
@@ -236,7 +236,7 @@ class APIContractValidator:
         path = Path(file_path)
 
         if not path.exists():
-            raise SDDFileNotFoundError(file_path=file_path, file_type="API contract")
+            raise SolokitFileNotFoundError(file_path=file_path, file_type="API contract")
 
         try:
             if file_path.endswith(".yaml") or file_path.endswith(".yml"):

@@ -5,8 +5,8 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from sdd.core.logging_config import get_logger
-from sdd.core.output import get_output
+from solokit.core.logging_config import get_logger
+from solokit.core.output import get_output
 
 logger = get_logger(__name__)
 output = get_output()

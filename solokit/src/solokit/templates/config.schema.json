@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/ankushdixit/sdd/schemas/config.json",
-  "title": "SDD Configuration",
+  "$id": "https://github.com/ankushdixit/solokit/schemas/config.json",
+  "title": "Solokit Configuration",
   "description": "Configuration for Session-Driven Development workflows",
   "type": "object",
   "properties": {

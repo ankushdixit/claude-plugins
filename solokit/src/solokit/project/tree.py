@@ -13,13 +13,13 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.constants import TREE_GENERATION_TIMEOUT
-from sdd.core.error_handlers import log_errors
-from sdd.core.exceptions import (
+from solokit.core.command_runner import CommandRunner
+from solokit.core.constants import TREE_GENERATION_TIMEOUT
+from solokit.core.error_handlers import log_errors
+from solokit.core.exceptions import (
     FileOperationError,
 )
-from sdd.core.output import get_output
+from solokit.core.output import get_output
 
 output = get_output()
 
@@ -69,7 +69,7 @@ class TreeGenerator:
             "*.log",
             "*.tmp",
             "*.backup",
-            # SDD
+            # Solokit
             ".session",
         ]
 
@@ -307,8 +307,8 @@ def main() -> None:
     """
     import argparse
 
-    from sdd.core.exceptions import SDDError
-    from sdd.core.output import get_output
+    from solokit.core.exceptions import SolokitError
+    from solokit.core.output import get_output
 
     output = get_output()
 
@@ -355,8 +355,8 @@ def main() -> None:
 
             output.info(f"✓ Saved to: {generator.tree_file}")
 
-    except SDDError as e:
-        # Handle structured SDD errors with user-friendly output
+    except SolokitError as e:
+        # Handle structured Solokit errors with user-friendly output
         output.error(f"\nError: {e.message}")
         if e.remediation:
             output.error(f"Suggestion: {e.remediation}")

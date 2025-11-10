@@ -13,8 +13,8 @@ from typing import Any, Literal, cast
 
 import yaml
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.exceptions import CommandExecutionError, FileOperationError
+from solokit.core.command_runner import CommandRunner
+from solokit.core.exceptions import CommandExecutionError, FileOperationError
 
 logger = logging.getLogger(__name__)
 

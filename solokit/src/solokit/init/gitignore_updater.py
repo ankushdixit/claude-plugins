@@ -1,7 +1,7 @@
 """
 Gitignore Updater Module
 
-Updates .gitignore with SDD and stack-specific entries.
+Updates .gitignore with Solokit and stack-specific entries.
 """
 
 from __future__ import annotations
@@ -9,7 +9,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from sdd.core.exceptions import FileOperationError
+from solokit.core.exceptions import FileOperationError
 
 logger = logging.getLogger(__name__)
 
@@ -90,7 +90,7 @@ def get_os_specific_gitignore_entries() -> list[str]:
 
 def update_gitignore(template_id: str, project_root: Path | None = None) -> Path:
     """
-    Add SDD and stack-specific patterns to .gitignore.
+    Add Solokit and stack-specific patterns to .gitignore.
 
     Args:
         template_id: Template identifier
@@ -169,7 +169,7 @@ def update_gitignore(template_id: str, project_root: Path | None = None) -> Path
                     f.write("\n")
 
                 if entries_to_add:
-                    f.write("\n# SDD-related patterns\n")
+                    f.write("\n# Solokit-related patterns\n")
                     for entry in entries_to_add:
                         f.write(f"{entry}\n")
 

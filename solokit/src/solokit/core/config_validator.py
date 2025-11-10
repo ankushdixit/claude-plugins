@@ -6,15 +6,15 @@ import logging
 from pathlib import Path
 from typing import Any
 
-from sdd.core.error_handlers import log_errors
-from sdd.core.exceptions import (
+from solokit.core.error_handlers import log_errors
+from solokit.core.exceptions import (
     ConfigurationError,
     ConfigValidationError,
     ErrorCode,
     ValidationError,
 )
-from sdd.core.exceptions import (
-    FileNotFoundError as SDDFileNotFoundError,
+from solokit.core.exceptions import (
+    FileNotFoundError as SolokitFileNotFoundError,
 )
 
 logger = logging.getLogger(__name__)
@@ -45,7 +45,7 @@ def validate_config(config_path: Path, schema_path: Path) -> dict[str, Any]:
         logger.warning("jsonschema not installed, skipping validation")
         # Still try to load and return config
         if not config_path.exists():
-            raise SDDFileNotFoundError(str(config_path), file_type="config")
+            raise SolokitFileNotFoundError(str(config_path), file_type="config")
         try:
             with open(config_path) as f:
                 config: dict[str, Any] = json.load(f)
@@ -61,7 +61,7 @@ def validate_config(config_path: Path, schema_path: Path) -> dict[str, Any]:
 
     # Load config
     if not config_path.exists():
-        raise SDDFileNotFoundError(str(config_path), file_type="config")
+        raise SolokitFileNotFoundError(str(config_path), file_type="config")
 
     try:
         with open(config_path) as f:
@@ -154,14 +154,14 @@ def main() -> None:
     """
     import sys
 
-    from sdd.core.exceptions import SDDError
-    from sdd.core.output import get_output
+    from solokit.core.exceptions import SolokitError
+    from solokit.core.output import get_output
 
     output = get_output()
 
     if len(sys.argv) < 2:
         output.info("Usage: config_validator.py <config_path> [schema_path]")
-        output.info("\nValidate SDD configuration against JSON schema.")
+        output.info("\nValidate Solokit configuration against JSON schema.")
         output.info("\nExample:")
         output.info("  python3 config_validator.py .session/config.json")
         output.info(
@@ -185,7 +185,7 @@ def main() -> None:
         validate_config(config_path, schema_path)
         output.success("Configuration is valid!")
         sys.exit(0)
-    except SDDError as e:
+    except SolokitError as e:
         output.info("✗ Configuration validation failed!\n")
         output.info(f"Error: {e.message}")
         if e.context:

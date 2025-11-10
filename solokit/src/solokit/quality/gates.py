@@ -20,15 +20,15 @@ import json
 from pathlib import Path
 from typing import Any
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.config import get_config_manager
-from sdd.core.constants import QUALITY_CHECK_VERY_LONG_TIMEOUT
-from sdd.core.error_handlers import log_errors
-from sdd.core.exceptions import (
+from solokit.core.command_runner import CommandRunner
+from solokit.core.config import get_config_manager
+from solokit.core.constants import QUALITY_CHECK_VERY_LONG_TIMEOUT
+from solokit.core.error_handlers import log_errors
+from solokit.core.exceptions import (
     FileOperationError,
 )
-from sdd.core.logging_config import get_logger
-from sdd.quality.checkers import (
+from solokit.core.logging_config import get_logger
+from solokit.quality.checkers import (
     CustomValidationChecker,
     DocumentationChecker,
     ExecutionChecker,
@@ -37,15 +37,15 @@ from sdd.quality.checkers import (
     SecurityChecker,
     SpecCompletenessChecker,
 )
-from sdd.quality.reporters import ConsoleReporter
-from sdd.quality.results import ResultAggregator
+from solokit.quality.reporters import ConsoleReporter
+from solokit.quality.results import ResultAggregator
 
 logger = get_logger(__name__)
 
 # Import spec validator for spec completeness quality gate
 try:
-    from sdd.core.exceptions import SpecValidationError
-    from sdd.work_items.spec_validator import validate_spec_file
+    from solokit.core.exceptions import SpecValidationError
+    from solokit.work_items.spec_validator import validate_spec_file
 except ImportError:
     validate_spec_file = None  # type: ignore[assignment]
     SpecValidationError = None  # type: ignore[assignment, misc]
@@ -406,7 +406,7 @@ class QualityGates:
 
     def run_integration_tests(self, work_item: dict) -> tuple[bool, dict[str, Any]]:
         """Run integration tests for integration test work items."""
-        from sdd.quality.checkers.integration import IntegrationChecker
+        from solokit.quality.checkers.integration import IntegrationChecker
 
         checker = IntegrationChecker(
             work_item=work_item,
@@ -419,7 +419,7 @@ class QualityGates:
 
     def validate_integration_environment(self, work_item: dict) -> tuple[bool, dict[str, Any]]:
         """Validate integration test environment requirements."""
-        from sdd.quality.checkers.integration import IntegrationChecker
+        from solokit.quality.checkers.integration import IntegrationChecker
 
         checker = IntegrationChecker(
             work_item=work_item,
@@ -432,7 +432,7 @@ class QualityGates:
 
     def validate_integration_documentation(self, work_item: dict) -> tuple[bool, dict[str, Any]]:
         """Validate integration test documentation requirements."""
-        from sdd.quality.checkers.integration import IntegrationChecker
+        from solokit.quality.checkers.integration import IntegrationChecker
 
         checker = IntegrationChecker(
             work_item=work_item,
@@ -445,7 +445,7 @@ class QualityGates:
 
     def verify_context7_libraries(self) -> tuple[bool, dict[str, Any]]:
         """Verify important libraries via Context7 MCP."""
-        from sdd.quality.checkers.context7 import Context7Checker
+        from solokit.quality.checkers.context7 import Context7Checker
 
         checker = Context7Checker(
             config=self.config.context7.__dict__,
@@ -457,7 +457,7 @@ class QualityGates:
 
     def run_deployment_gates(self, work_item: dict) -> tuple[bool, dict[str, Any]]:
         """Run deployment-specific quality gates."""
-        from sdd.quality.checkers.deployment import DeploymentChecker
+        from solokit.quality.checkers.deployment import DeploymentChecker
 
         checker = DeploymentChecker(
             work_item=work_item,

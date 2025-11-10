@@ -9,8 +9,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from sdd.core.logging_config import get_logger
-from sdd.core.types import WorkItemStatus
+from solokit.core.logging_config import get_logger
+from solokit.core.types import WorkItemStatus
 
 logger = get_logger(__name__)
 

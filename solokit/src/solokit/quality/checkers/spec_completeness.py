@@ -11,13 +11,13 @@ import time
 from pathlib import Path
 from typing import Any, Union, cast
 
-from sdd.core.exceptions import (
-    FileNotFoundError as SDDFileNotFoundError,
+from solokit.core.exceptions import (
+    FileNotFoundError as SolokitFileNotFoundError,
 )
-from sdd.core.exceptions import SpecValidationError
-from sdd.core.logging_config import get_logger
-from sdd.quality.checkers.base import CheckResult, QualityChecker
-from sdd.work_items.spec_validator import validate_spec_file
+from solokit.core.exceptions import SpecValidationError
+from solokit.core.logging_config import get_logger
+from solokit.quality.checkers.base import CheckResult, QualityChecker
+from solokit.work_items.spec_validator import validate_spec_file
 
 logger = get_logger(__name__)
 
@@ -103,7 +103,7 @@ class SpecCompletenessChecker(QualityChecker):
                 },
                 execution_time=execution_time,
             )
-        except SDDFileNotFoundError as e:
+        except SolokitFileNotFoundError as e:
             execution_time = time.time() - start_time
             return CheckResult(
                 checker_name=self.name(),

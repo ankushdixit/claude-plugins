@@ -6,12 +6,12 @@ import re
 from pathlib import Path
 from typing import Any
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.constants import GIT_STANDARD_TIMEOUT
-from sdd.core.error_handlers import log_errors
-from sdd.core.exceptions import FileOperationError
-from sdd.core.file_ops import load_json
-from sdd.core.logging_config import get_logger
+from solokit.core.command_runner import CommandRunner
+from solokit.core.constants import GIT_STANDARD_TIMEOUT
+from solokit.core.error_handlers import log_errors
+from solokit.core.exceptions import FileOperationError
+from solokit.core.file_ops import load_json
+from solokit.core.logging_config import get_logger
 
 logger = get_logger(__name__)
 

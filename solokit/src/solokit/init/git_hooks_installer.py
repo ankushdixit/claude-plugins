@@ -11,7 +11,7 @@ import shutil
 import stat
 from pathlib import Path
 
-from sdd.core.exceptions import FileOperationError, NotAGitRepoError, TemplateNotFoundError
+from solokit.core.exceptions import FileOperationError, NotAGitRepoError, TemplateNotFoundError
 
 logger = logging.getLogger(__name__)
 

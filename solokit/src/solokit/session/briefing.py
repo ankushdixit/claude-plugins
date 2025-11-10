@@ -4,7 +4,7 @@ Generate session briefing for next work item.
 Enhanced with full project context loading.
 
 This module has been refactored into a package structure.
-All functionality is now in sdd.session.briefing.* modules.
+All functionality is now in solokit.session.briefing.* modules.
 This file maintains the CLI entry point and backward compatibility.
 """
 
@@ -12,8 +12,8 @@ import json
 from datetime import datetime
 from pathlib import Path
 
-from sdd.core.error_handlers import log_errors
-from sdd.core.exceptions import (
+from solokit.core.error_handlers import log_errors
+from solokit.core.exceptions import (
     GitError,
     SessionAlreadyActiveError,
     SessionNotFoundError,
@@ -21,12 +21,12 @@ from sdd.core.exceptions import (
     ValidationError,
     WorkItemNotFoundError,
 )
-from sdd.core.logging_config import get_logger
-from sdd.core.output import get_output
-from sdd.core.types import WorkItemStatus
+from solokit.core.logging_config import get_logger
+from solokit.core.output import get_output
+from solokit.core.types import WorkItemStatus
 
 # Import from refactored briefing package
-from sdd.session.briefing import (
+from solokit.session.briefing import (
     calculate_days_ago,  # noqa: F401
     check_command_exists,  # noqa: F401
     check_git_status,  # noqa: F401
@@ -149,12 +149,12 @@ def main():
 
         if not item_id:
             logger.warning("No available work items found")
-            from sdd.core.exceptions import ErrorCode, ValidationError
+            from solokit.core.exceptions import ErrorCode, ValidationError
 
             raise ValidationError(
                 message="No available work items. All dependencies must be satisfied first.",
                 code=ErrorCode.INVALID_STATUS,
-                remediation="Complete dependencies or use 'sdd work-list' to see work item status",
+                remediation="Complete dependencies or use 'sk work-list' to see work item status",
             )
 
     # Finalize previous work item's git status if starting a new work item
@@ -187,7 +187,7 @@ def main():
     # Start git workflow for work item
     try:
         # Import git workflow from new location
-        from sdd.git.integration import GitWorkflow
+        from solokit.git.integration import GitWorkflow
 
         workflow = GitWorkflow()
         git_result = workflow.start_work_item(item_id, session_num)
@@ -312,7 +312,7 @@ def _cli_main():
         output.info(f"\nWarning: {e.message}")
         output.info("\nOptions:")
         output.info("1. Complete current work item first: /end")
-        output.info("2. Force start new work item: sdd start <work_item_id> --force")
+        output.info("2. Force start new work item: sk start <work_item_id> --force")
         output.info("3. Cancel: Ctrl+C\n")
         return e.exit_code
     except UnmetDependencyError as e:

@@ -13,7 +13,7 @@ import shutil
 from pathlib import Path
 from typing import Any, cast
 
-from sdd.core.exceptions import FileOperationError, TemplateNotFoundError
+from solokit.core.exceptions import FileOperationError, TemplateNotFoundError
 
 logger = logging.getLogger(__name__)
 

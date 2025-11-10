@@ -8,8 +8,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from sdd.core.exceptions import GitError, SystemError
-from sdd.core.logging_config import get_logger
+from solokit.core.exceptions import GitError, SystemError
+from solokit.core.logging_config import get_logger
 
 from .documentation_loader import DocumentationLoader
 from .formatter import BriefingFormatter
@@ -112,9 +112,9 @@ class SessionBriefing:
             Validation warning string or None if valid
         """
         try:
-            from sdd.core.exceptions import FileNotFoundError as SDDFileNotFoundError
-            from sdd.core.exceptions import SpecValidationError
-            from sdd.work_items.spec_validator import (
+            from solokit.core.exceptions import FileNotFoundError as SolokitFileNotFoundError
+            from solokit.core.exceptions import SpecValidationError
+            from solokit.work_items.spec_validator import (
                 format_validation_report,
                 validate_spec_file,
             )
@@ -126,7 +126,7 @@ class SessionBriefing:
             except SpecValidationError as e:
                 # Spec has validation errors
                 return format_validation_report(item_id, work_item_type, e)
-            except (SDDFileNotFoundError, Exception):
+            except (SolokitFileNotFoundError, Exception):
                 # Spec file doesn't exist or other error - this is not critical for briefing
                 # Just return None and let the briefing proceed
                 return None

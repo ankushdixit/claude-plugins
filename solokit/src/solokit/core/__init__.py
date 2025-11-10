@@ -1,1 +1,1 @@
-"""Core functionality for SDD including file operations, logging, and configuration."""
+"""Core functionality for Solokit including file operations, logging, and configuration."""

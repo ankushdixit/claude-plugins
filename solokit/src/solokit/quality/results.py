@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from sdd.quality.checkers.base import CheckResult
+from solokit.quality.checkers.base import CheckResult
 
 
 class ResultAggregator:

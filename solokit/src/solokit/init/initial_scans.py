@@ -9,8 +9,8 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.constants import GIT_STANDARD_TIMEOUT
+from solokit.core.command_runner import CommandRunner
+from solokit.core.constants import GIT_STANDARD_TIMEOUT
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ def run_stack_scan(project_root: Path | None = None) -> bool:
     if project_root is None:
         project_root = Path.cwd()
 
-    # Get SDD installation directory
+    # Get Solokit installation directory
     script_dir = Path(__file__).parent.parent / "project"
     stack_script = script_dir / "stack.py"
 
@@ -66,7 +66,7 @@ def run_tree_scan(project_root: Path | None = None) -> bool:
     if project_root is None:
         project_root = Path.cwd()
 
-    # Get SDD installation directory
+    # Get Solokit installation directory
     script_dir = Path(__file__).parent.parent / "project"
     tree_script = script_dir / "tree.py"
 

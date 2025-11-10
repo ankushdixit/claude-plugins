@@ -8,13 +8,13 @@ import json
 from pathlib import Path
 from typing import Any, Optional
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.constants import GIT_QUICK_TIMEOUT
-from sdd.core.error_handlers import log_errors
-from sdd.core.exceptions import ErrorCode, GitError, SystemError
-from sdd.core.logging_config import get_logger
-from sdd.core.output import get_output
-from sdd.core.types import GitStatus, WorkItemStatus
+from solokit.core.command_runner import CommandRunner
+from solokit.core.constants import GIT_QUICK_TIMEOUT
+from solokit.core.error_handlers import log_errors
+from solokit.core.exceptions import ErrorCode, GitError, SystemError
+from solokit.core.logging_config import get_logger
+from solokit.core.output import get_output
+from solokit.core.types import GitStatus, WorkItemStatus
 
 logger = get_logger(__name__)
 output = get_output()
@@ -41,7 +41,7 @@ class GitContext:
         """
         try:
             # Import git workflow from new location
-            from sdd.git.integration import GitWorkflow
+            from solokit.git.integration import GitWorkflow
 
             workflow = GitWorkflow()
             is_clean: bool
@@ -54,7 +54,7 @@ class GitContext:
             raise SystemError(
                 message="Failed to import GitWorkflow",
                 code=ErrorCode.IMPORT_FAILED,
-                context={"module": "sdd.git.integration", "error": str(e)},
+                context={"module": "solokit.git.integration", "error": str(e)},
                 remediation="Ensure git integration module is properly installed",
                 cause=e,
             ) from e

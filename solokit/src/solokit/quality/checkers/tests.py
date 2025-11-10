@@ -12,10 +12,10 @@ import time
 from pathlib import Path
 from typing import Any, Union, cast
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.constants import TEST_RUNNER_TIMEOUT
-from sdd.core.logging_config import get_logger
-from sdd.quality.checkers.base import CheckResult, QualityChecker
+from solokit.core.command_runner import CommandRunner
+from solokit.core.constants import TEST_RUNNER_TIMEOUT
+from solokit.core.logging_config import get_logger
+from solokit.quality.checkers.base import CheckResult, QualityChecker
 
 logger = get_logger(__name__)
 

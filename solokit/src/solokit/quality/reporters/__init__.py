@@ -3,8 +3,8 @@
 
 from __future__ import annotations
 
-from sdd.quality.reporters.base import Reporter
-from sdd.quality.reporters.console import ConsoleReporter
-from sdd.quality.reporters.json_reporter import JSONReporter
+from solokit.quality.reporters.base import Reporter
+from solokit.quality.reporters.console import ConsoleReporter
+from solokit.quality.reporters.json_reporter import JSONReporter
 
 __all__ = ["Reporter", "ConsoleReporter", "JSONReporter"]

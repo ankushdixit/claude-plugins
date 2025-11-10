@@ -18,17 +18,17 @@ import logging
 from datetime import datetime
 from pathlib import Path
 
-from sdd.core.command_runner import CommandRunner
-from sdd.core.config import get_config_manager
-from sdd.core.constants import (
+from solokit.core.command_runner import CommandRunner
+from solokit.core.config import get_config_manager
+from solokit.core.constants import (
     GIT_LONG_TIMEOUT,
     GIT_QUICK_TIMEOUT,
     GIT_STANDARD_TIMEOUT,
     get_config_file,
     get_work_items_file,
 )
-from sdd.core.error_handlers import convert_subprocess_errors
-from sdd.core.exceptions import (
+from solokit.core.error_handlers import convert_subprocess_errors
+from solokit.core.exceptions import (
     CommandExecutionError,
     ErrorCode,
     FileOperationError,
@@ -36,7 +36,7 @@ from sdd.core.exceptions import (
     NotAGitRepoError,
     WorkingDirNotCleanError,
 )
-from sdd.core.types import GitStatus, WorkItemStatus, WorkItemType
+from solokit.core.types import GitStatus, WorkItemStatus, WorkItemType
 
 logger = logging.getLogger(__name__)
 

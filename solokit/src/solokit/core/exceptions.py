@@ -1,11 +1,11 @@
 """
-Comprehensive exception hierarchy for SDD.
+Comprehensive exception hierarchy for Solokit.
 
 Provides structured exceptions with error codes, categories, and context.
 All business logic should raise these exceptions rather than returning error tuples.
 
 Usage:
-    from sdd.core.exceptions import WorkItemNotFoundError
+    from solokit.core.exceptions import WorkItemNotFoundError
 
     def get_work_item(item_id: str) -> WorkItem:
         if item_id not in work_items:
@@ -26,8 +26,8 @@ from __future__ import annotations
 from enum import Enum
 from typing import Any
 
-from sdd.core.logging_config import get_logger
-from sdd.core.output import get_output
+from solokit.core.logging_config import get_logger
+from solokit.core.output import get_output
 
 logger = get_logger(__name__)
 output = get_output()
@@ -136,9 +136,9 @@ class ErrorCode(Enum):
     LOAD_TEST_FAILED = 13004
 
 
-class SDDError(Exception):
+class SolokitError(Exception):
     """
-    Base exception for all SDD errors.
+    Base exception for all Solokit errors.
 
     Attributes:
         message: Human-readable error message
@@ -150,7 +150,7 @@ class SDDError(Exception):
         exit_code: Suggested exit code for CLI
 
     Example:
-        >>> error = SDDError(
+        >>> error = SolokitError(
         ...     message="Something went wrong",
         ...     code=ErrorCode.FILE_OPERATION_FAILED,
         ...     category=ErrorCategory.SYSTEM,
@@ -220,7 +220,7 @@ class SDDError(Exception):
 # ============================================================================
 
 
-class ValidationError(SDDError):
+class ValidationError(SolokitError):
     """
     Raised when validation fails.
 
@@ -283,7 +283,7 @@ class SpecValidationError(ValidationError):
 # ============================================================================
 
 
-class NotFoundError(SDDError):
+class NotFoundError(SolokitError):
     """
     Raised when a resource is not found.
 
@@ -326,7 +326,7 @@ class WorkItemNotFoundError(NotFoundError):
             message=f"Work item '{work_item_id}' not found",
             code=ErrorCode.WORK_ITEM_NOT_FOUND,
             context={"work_item_id": work_item_id},
-            remediation="Use 'sdd work-list' to see available work items",
+            remediation="Use 'sk work-list' to see available work items",
         )
 
 
@@ -373,7 +373,7 @@ class SessionNotFoundError(NotFoundError):
         super().__init__(
             message="No active session found",
             code=ErrorCode.SESSION_NOT_FOUND,
-            remediation="Start a session with 'sdd start' or 'sdd start <work_item_id>'",
+            remediation="Start a session with 'sk start' or 'sk start <work_item_id>'",
         )
 
 
@@ -382,7 +382,7 @@ class SessionNotFoundError(NotFoundError):
 # ============================================================================
 
 
-class ConfigurationError(SDDError):
+class ConfigurationError(SolokitError):
     """
     Raised when configuration is invalid.
 
@@ -443,7 +443,7 @@ class ConfigValidationError(ConfigurationError):
 # ============================================================================
 
 
-class GitError(SDDError):
+class GitError(SolokitError):
     """
     Raised for git-related errors.
 
@@ -533,7 +533,7 @@ class BranchNotFoundError(GitError):
 # ============================================================================
 
 
-class SystemError(SDDError):
+class SystemError(SolokitError):
     """
     Raised for system-level errors.
 
@@ -661,7 +661,7 @@ class CommandExecutionError(SystemError):
 # ============================================================================
 
 
-class DependencyError(SDDError):
+class DependencyError(SolokitError):
     """
     Raised for dependency-related errors.
 
@@ -731,7 +731,7 @@ class UnmetDependencyError(DependencyError):
 # ============================================================================
 
 
-class AlreadyExistsError(SDDError):
+class AlreadyExistsError(SolokitError):
     """
     Raised when resource already exists.
 
@@ -774,7 +774,7 @@ class SessionAlreadyActiveError(AlreadyExistsError):
             message=f"Session already active for '{current_work_item_id}'",
             code=ErrorCode.SESSION_ALREADY_ACTIVE,
             context={"current_work_item_id": current_work_item_id},
-            remediation="Complete current session with 'sdd end' before starting a new one",
+            remediation="Complete current session with 'sk end' before starting a new one",
         )
 
 
@@ -791,7 +791,7 @@ class WorkItemAlreadyExistsError(AlreadyExistsError):
             message=f"Work item '{work_item_id}' already exists",
             code=ErrorCode.WORK_ITEM_ALREADY_EXISTS,
             context={"work_item_id": work_item_id},
-            remediation=f"Use 'sdd work-show {work_item_id}' to view existing work item",
+            remediation=f"Use 'sk work-show {work_item_id}' to view existing work item",
         )
 
 
@@ -800,7 +800,7 @@ class WorkItemAlreadyExistsError(AlreadyExistsError):
 # ============================================================================
 
 
-class QualityGateError(SDDError):
+class QualityGateError(SolokitError):
     """
     Raised when quality gate fails.
 
@@ -945,7 +945,7 @@ class LearningNotFoundError(NotFoundError):
 # ============================================================================
 
 
-class DeploymentError(SDDError):
+class DeploymentError(SolokitError):
     """
     Raised when deployment operations fail.
 
@@ -1111,7 +1111,7 @@ class DeploymentStepError(DeploymentError):
 # ============================================================================
 
 
-class IntegrationTestError(SDDError):
+class IntegrationTestError(SolokitError):
     """
     Base exception for integration test failures.
 
@@ -1368,7 +1368,7 @@ class InvalidOpenAPISpecError(APIValidationError):
 # ============================================================================
 
 
-class PerformanceTestError(SDDError):
+class PerformanceTestError(SolokitError):
     """
     Base class for performance testing errors.
 
@@ -1500,7 +1500,7 @@ class LoadTestFailedError(PerformanceTestError):
 # ============================================================================
 
 
-class ProjectInitializationError(SDDError):
+class ProjectInitializationError(SolokitError):
     """
     Base exception for project initialization errors.
 
@@ -1531,7 +1531,7 @@ class ProjectInitializationError(SDDError):
 
 class DirectoryNotEmptyError(AlreadyExistsError):
     """
-    Raised when attempting to initialize in a directory that already has SDD structure.
+    Raised when attempting to initialize in a directory that already has Solokit structure.
 
     Example:
         >>> raise DirectoryNotEmptyError(".session")
@@ -1563,5 +1563,5 @@ class TemplateNotFoundError(FileNotFoundError):
         self.template_name = template_name
         self.template_path = template_path
         self.remediation = (
-            f"Ensure SDD is properly installed and template file exists: {template_name}"
+            f"Ensure Solokit is properly installed and template file exists: {template_name}"
         )

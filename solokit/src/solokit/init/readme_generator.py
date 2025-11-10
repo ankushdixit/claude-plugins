@@ -9,8 +9,8 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from sdd.core.exceptions import FileOperationError
-from sdd.init.template_installer import get_template_info, load_template_registry
+from solokit.core.exceptions import FileOperationError
+from solokit.init.template_installer import get_template_info, load_template_registry
 
 logger = logging.getLogger(__name__)
 
@@ -163,17 +163,17 @@ pyright
     # Add Session-Driven Development section
     readme_content += """## Session-Driven Development
 
-This project uses Session-Driven Development (SDD) for organized, AI-augmented development.
+This project uses Session-Driven Development (Solokit) for organized, AI-augmented development.
 
 ### Commands
 
-- `/sdd:work-new` - Create a new work item
-- `/sdd:work-list` - List all work items
-- `/sdd:start` - Start working on a work item
-- `/sdd:status` - Check current session status
-- `/sdd:validate` - Validate quality gates
-- `/sdd:end` - Complete current session
-- `/sdd:learn` - Capture a learning
+- `/sk:work-new` - Create a new work item
+- `/sk:work-list` - List all work items
+- `/sk:start` - Start working on a work item
+- `/sk:status` - Check current session status
+- `/sk:validate` - Validate quality gates
+- `/sk:end` - Complete current session
+- `/sk:learn` - Capture a learning
 
 ### Documentation
 

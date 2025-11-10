@@ -17,8 +17,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from sdd.core.error_handlers import convert_file_errors, log_errors
-from sdd.core.exceptions import (
+from solokit.core.error_handlers import convert_file_errors, log_errors
+from solokit.core.exceptions import (
     DeploymentStepError,
     ErrorCode,
     FileOperationError,
@@ -26,7 +26,7 @@ from sdd.core.exceptions import (
     RollbackError,
     SmokeTestError,
 )
-from sdd.core.output import get_output
+from solokit.core.output import get_output
 
 output = get_output()
 
@@ -366,7 +366,7 @@ def main() -> None:
     """
     import sys
 
-    from sdd.core.exceptions import ValidationError
+    from solokit.core.exceptions import ValidationError
 
     if len(sys.argv) < 2:
         raise ValidationError(
