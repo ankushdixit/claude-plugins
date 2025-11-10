@@ -2,33 +2,33 @@
 
 Official marketplace for Claude Code plugins by Ankush Dixit.
 
-> **📦 Distribution Repository** - This is a marketplace for installing plugins. For SDD plugin development, issues, and contributions, visit the main repository: **[github.com/ankushdixit/sdd](https://github.com/ankushdixit/sdd)**
+> **📦 Distribution Repository** - This is a marketplace for installing plugins. For Solokit plugin development, issues, and contributions, visit the main repository: **[github.com/ankushdixit/solokit](https://github.com/ankushdixit/solokit)**
 
 ## Available Plugins
 
-### 📦 SDD (Session-Driven Development)
+### 📦 Solokit
 
-**Session-Driven Development for Claude Code** - Maintain perfect context across multiple AI coding sessions.
+**Structured Solo Development with AI and Quality Automation** - Build production software alone with team-level sophistication.
 
-- **Plugin Name**: `sdd`
-- **Version**: 0.7.0
+- **Plugin Name**: `solokit`
+- **Version**: 0.1.0
 - **Status**: Production-ready ✅
 - **License**: MIT
 
 **Key Features:**
-- ✅ **Session Management** - Comprehensive briefings with perfect context continuity
-- ✅ **Work Item Tracking** - Dependency graphs, critical path analysis, bottleneck detection
+- ✅ **4 Production Stacks** - T3 Stack, FastAPI, Refine, Next.js with 4 quality tiers each
+- ✅ **Session Management** - AI-powered briefings with perfect context continuity
+- ✅ **Work Item Tracking** - Dependency graphs, critical path analysis, spec-first architecture
 - ✅ **Learning System** - AI-powered knowledge capture and curation (6 categories)
 - ✅ **Quality Gates** - Automated tests, linting, security scans, documentation checks
 - ✅ **Integration Testing** - API contract validation, environment checks, performance benchmarks
-- ✅ **Deployment Support** - Multi-environment deployment with validation
-- ✅ **Git Workflow** - Automated commits, standardized messages, push automation
+- ✅ **Git Workflow** - Automated commits, standardized messages, PR creation
 
-**Commands:** 15 slash commands for complete session-driven development workflow
+**Commands:** 15 slash commands (`/sk:*`) for complete solo development workflow
 
 **Documentation & Source:**
-- [View Full Documentation →](https://github.com/ankushdixit/sdd#readme)
-- [Standalone Repository](https://github.com/ankushdixit/sdd) (for direct clone installation)
+- [View Full Documentation →](https://github.com/ankushdixit/solokit#readme)
+- [Standalone Repository](https://github.com/ankushdixit/solokit) (for direct clone installation)
 - [Marketplace Repository](https://github.com/ankushdixit/claude-plugins) (this repo)
 
 ---
@@ -49,54 +49,54 @@ Select **"Add marketplace"** and enter:
 ankushdixit/claude-plugins
 ```
 
-#### 2. Install the SDD Plugin
+#### 2. Install the Solokit Plugin
 
 1. Select **"Browse and install plugins"**
-2. Choose `sdd`
+2. Choose `solokit`
 3. Click **Install**
 4. Restart Claude Code
 
-#### 3. One-Time Setup (Required for v0.7.0+)
+#### 3. One-Time Setup (Required)
 
 After installing the plugin, run this command once:
 
 ```bash
-pip install -e ~/.claude/plugins/marketplaces/claude-plugins/sdd
+pip install -e ~/.claude/plugins/marketplaces/claude-plugins/solokit
 ```
 
-This installs the `sdd` command globally, enabling all slash commands to work.
+This installs the `sk` command globally, enabling all slash commands to work.
 
 #### 4. Verify Installation
 
 ```bash
-# Check sdd command is available
-which sdd
+# Check sk command is available
+which sk
 
 # Test the command
-sdd status
+sk status
 ```
 
 Type `/` in Claude Code to see available commands. Try:
 ```
-/sdd:init
+/sk:init
 ```
 
-You should see the SDD initialization command ready to use.
+You should see the Solokit initialization command ready to use.
 
 ---
 
 ## Installation Methods Comparison
 
-SDD can be installed in two different ways, depending on your preference:
+Solokit can be installed in two different ways, depending on your preference:
 
 ### Method 1: Via Marketplace (Recommended)
 
 **Install from:** `ankushdixit/claude-plugins` marketplace
 
-**Commands use the `sdd:` prefix:** `/sdd:init`, `/sdd:work-new`, `/sdd:start`
+**Commands use the `sk:` prefix:** `/sk:init`, `/sk:work-new`, `/sk:start`
 
 **Best for:**
-- Using SDD across multiple projects
+- Using Solokit across multiple projects
 - Easy updates through the marketplace
 - Keeping commands organized with prefixes
 - Installing multiple plugins without command conflicts
@@ -106,96 +106,98 @@ SDD can be installed in two different ways, depending on your preference:
 # 1. Add marketplace in Claude Code
 /plugin marketplace add ankushdixit/claude-plugins
 
-# 2. Install the sdd plugin (via UI)
+# 2. Install the solokit plugin (via UI)
 
 # 3. One-time setup (enables commands)
-pip install -e ~/.claude/plugins/marketplaces/claude-plugins/sdd
+pip install -e ~/.claude/plugins/marketplaces/claude-plugins/solokit
 ```
 
-**Note:** The pip install step is required for v7.0+ to enable the `sdd` CLI command that powers all slash commands.
+**Note:** The pip install step is required to enable the `sk` CLI command that powers all slash commands.
 
 ---
 
 ### Method 2: Direct Clone (Alternative)
 
-**Install from:** `https://github.com/ankushdixit/sdd` repository
+**Install from:** `https://github.com/ankushdixit/solokit` repository
 
 **Commands use NO prefix:** `/init`, `/work-new`, `/start`
 
 **Best for:**
 - Project-specific installation
 - Customizing commands locally
-- Using SDD in a single project
+- Using Solokit in a single project
 - Wanting shorter command names
 
 **Installation:**
 ```bash
 # Clone into your project's .claude directory
 cd /path/to/your/project
-git clone https://github.com/ankushdixit/sdd .claude
+git clone https://github.com/ankushdixit/solokit .claude
 ```
 
-**Note:** With direct clone, commands are available immediately without the `sdd:` prefix. For example, use `/init` instead of `/sdd:init`.
+**Note:** With direct clone, commands are available immediately without the `sk:` prefix. For example, use `/init` instead of `/sk:init`.
 
 ---
 
-## Using the SDD Plugin
+## Using the Solokit Plugin
 
-**Note:** The examples below use the marketplace installation commands (with `sdd:` prefix). If you installed via direct clone, omit the `sdd:` prefix (e.g., use `/init` instead of `/sdd:init`).
+**Note:** The examples below use the marketplace installation commands (with `sk:` prefix). If you installed via direct clone, omit the `sk:` prefix (e.g., use `/init` instead of `/sk:init`).
 
 ### Quick Start Workflow
 
-1. **Initialize your project:**
+1. **Initialize your project with a production stack:**
    ```
-   /sdd:init
+   /sk:init
    ```
+   Choose from: T3 Stack, FastAPI, Refine, or Next.js with 4 quality tiers
 
 2. **Create a work item:**
    ```
-   /sdd:work-new
+   /sk:work-new
    ```
 
 3. **Start a session:**
    ```
-   /sdd:start
+   /sk:start
    ```
 
 4. **Develop with Claude** and capture learnings:
    ```
-   /sdd:learn
+   /sk:learn
    ```
 
 5. **End the session** (runs quality gates):
    ```
-   /sdd:end
+   /sk:end
    ```
 
 ### Available Commands
 
 **Session Management:**
-- `/sdd:init` - Initialize project structure
-- `/sdd:start` - Begin work session with comprehensive briefing
-- `/sdd:end` - Complete session with quality gates
-- `/sdd:validate` - Pre-flight check before completion
-- `/sdd:status` - Quick session overview
+- `/sk:init` - Initialize project with production templates
+- `/sk:start` - Begin work session with comprehensive briefing
+- `/sk:end` - Complete session with quality gates
+- `/sk:validate` - Pre-flight check before completion
+- `/sk:status` - Quick session overview
 
 **Work Item Management:**
-- `/sdd:work-new` - Create new work item with dependencies
-- `/sdd:work-list` - List work items with filters
-- `/sdd:work-show` - Show work item details
-- `/sdd:work-update` - Update work item fields
-- `/sdd:work-next` - Get next recommended work item
-- `/sdd:work-graph` - Visualize dependencies with critical path
+- `/sk:work-new` - Create new work item with dependencies
+- `/sk:work-list` - List work items with filters
+- `/sk:work-show` - Show work item details
+- `/sk:work-update` - Update work item fields
+- `/sk:work-next` - Get next recommended work item
+- `/sk:work-delete` - Delete work item
+- `/sk:work-graph` - Visualize dependencies with critical path
 
 **Learning Management:**
-- `/sdd:learn` - Capture insight during development
-- `/sdd:learn-show` - Browse learnings with filters
-- `/sdd:learn-search` - Full-text search across learnings
-- `/sdd:learn-curate` - Run AI-powered curation
+- `/sk:learn` - Capture insight during development
+- `/sk:learn-show` - Browse learnings with filters
+- `/sk:learn-search` - Full-text search across learnings
+- `/sk:learn-curate` - Run AI-powered curation
 
 ---
 
-## What Makes SDD Different?
+## What Makes Solokit Different?
 
 ### The Problem It Solves
 
@@ -203,11 +205,12 @@ Traditional AI coding sessions suffer from:
 - **Context loss** between sessions - AI forgets what was done previously
 - **Quality entropy** over time - Standards slip without enforcement
 - **Knowledge fragmentation** - Learnings get lost across interactions
-- **Lack of process rigor** - No systematic workflow for complex projects
+- **Lack of starting templates** - Every project starts from scratch
 
-### The SDD Solution
+### The Solokit Solution
 
-Session-Driven Development provides:
+Solokit provides:
+- **Production-ready foundations** with 4 battle-tested stacks × 4 quality tiers
 - **Perfect context continuity** through automated briefings that load full project state
 - **Quality enforcement** via automated validation gates (tests, linting, security scans)
 - **Knowledge accumulation** through learnings system with AI-powered categorization
@@ -216,31 +219,42 @@ Session-Driven Development provides:
 
 ---
 
+## Production Templates
+
+Solokit includes 4 production-ready stacks, each with 4 quality tiers:
+
+**Stacks:**
+- **T3 Stack** - tRPC + Next.js + Prisma + Tailwind (Full-stack TypeScript SaaS)
+- **FastAPI** - Python ML/AI API with async support
+- **Refine** - React admin dashboard with Ant Design
+- **Next.js** - Full-stack React framework
+
+**Quality Tiers:**
+- **Essential** - Basic linting, formatting, unit tests
+- **Standard** - + Pre-commit hooks, security scanning
+- **Comprehensive** - + E2E tests, mutation testing, type coverage
+- **Production** - + Monitoring, load testing, performance tracking
+
+---
+
 ## Plugin Development Status
 
-**Current Version:** 0.7.0 (Production-ready)
+**Current Version:** 0.1.0 (Initial Public Release)
 
-### Completed Phases
+### Core Features Complete
 
-| Phase | Version | Description | Status |
-|-------|---------|-------------|--------|
-| Phase 0 | v0.0 | Foundation & Documentation | ✅ Complete |
-| Phase 1 | v0.1 | Core Plugin Foundation | ✅ Complete |
-| Phase 2 | v0.2 | Work Item System | ✅ Complete |
-| Phase 3 | v0.3 | Dependency Visualization | ✅ Complete |
-| Phase 4 | v0.4 | Learning Management | ✅ Complete |
-| Phase 5 | v0.5 | Quality Gates | ✅ Complete |
-| Phase 5.5 | v0.5.5 | Integration Testing | ✅ Complete |
-| Phase 5.6 | v0.5.6 | Deployment Support | ✅ Complete |
-| Phase 5.7 | v0.5.7 | Spec-First Architecture | ✅ Complete |
-| Phase 5.8 | v0.5.8 | Marketplace Plugin Support | ✅ Complete |
-| Phase 5.9 | v0.6.0 | Standard Python src/ Layout | ✅ Complete |
+| Feature | Status |
+|---------|--------|
+| Production Templates (4 stacks × 4 tiers) | ✅ Complete |
+| Session Management | ✅ Complete |
+| Work Item System | ✅ Complete |
+| Dependency Visualization | ✅ Complete |
+| Learning Management | ✅ Complete |
+| Quality Gates | ✅ Complete |
+| Integration Testing | ✅ Complete |
+| Git Workflow Automation | ✅ Complete |
 
-**Test Coverage:** 1416/1416 tests passing (100%)
-
-### Upcoming Features
-
-- **Phase 8** (v0.8+): Advanced Features - Templates, metrics, AI enhancements
+**Test Coverage:** 2,391/2,391 tests passing (100%)
 
 ---
 
@@ -272,14 +286,14 @@ Quality gates gracefully skip when tools aren't available, so you only need to i
 
 ## Contributing
 
-### For SDD Plugin Contributions
+### For Solokit Plugin Contributions
 
-**This repository is for marketplace distribution only.** For SDD plugin development:
+**This repository is for marketplace distribution only.** For Solokit plugin development:
 
-- 🐛 **Report bugs**: https://github.com/ankushdixit/sdd/issues
-- 💡 **Request features**: https://github.com/ankushdixit/sdd/issues
-- 🔧 **Submit PRs**: https://github.com/ankushdixit/sdd/pulls
-- 📖 **View docs**: https://github.com/ankushdixit/sdd#readme
+- 🐛 **Report bugs**: https://github.com/ankushdixit/solokit/issues
+- 💡 **Request features**: https://github.com/ankushdixit/solokit/issues
+- 🔧 **Submit PRs**: https://github.com/ankushdixit/solokit/pulls
+- 📖 **View docs**: https://github.com/ankushdixit/solokit#readme
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
@@ -297,26 +311,26 @@ To submit a different plugin to this marketplace, please open an issue with:
 
 ## Repository Sync & Maintenance
 
-### Automated Sync from Main SDD Repo
+### Automated Sync from Main Solokit Repo
 
-**This repository is automatically synced** from the main SDD repository at [github.com/ankushdixit/sdd](https://github.com/ankushdixit/sdd).
+**This repository is automatically synced** from the main Solokit repository at [github.com/ankushdixit/solokit](https://github.com/ankushdixit/solokit).
 
 #### How It Works
 
-1. **Automatic Sync**: Every push to the `main` branch of the SDD repository triggers a GitHub Actions workflow
+1. **Automatic Sync**: Every push to the `main` branch of the Solokit repository triggers a GitHub Actions workflow
 2. **File Sync**: The following files/directories are automatically synced:
-   - `src/sdd/` → `sdd/src/sdd/` (complete package structure)
-   - `.claude/commands/` → `sdd/commands/`
-   - `pyproject.toml` → `sdd/pyproject.toml`
-3. **Version Sync**: Version is automatically extracted from `pyproject.toml` and updated in `sdd/.claude-plugin/plugin.json`
+   - `src/solokit/` → `solokit/src/solokit/` (complete package structure)
+   - `.claude/commands/` → `solokit/commands/`
+   - `pyproject.toml` → `solokit/pyproject.toml`
+3. **Version Sync**: Version is automatically extracted from `pyproject.toml` and updated in `solokit/.claude-plugin/plugin.json`
 4. **Preserved Files**: The following files are maintained separately in this repo and NOT synced:
    - `README.md` (this marketplace README)
-   - `CONTRIBUTING.md` (directs to main SDD repo)
+   - `CONTRIBUTING.md` (directs to main Solokit repo)
    - `LICENSE`, `SECURITY.md` (static policy files)
 
 #### Why This Approach?
 
-- ✅ **Single Source of Truth**: All development happens in the main SDD repo
+- ✅ **Single Source of Truth**: All development happens in the main Solokit repo
 - ✅ **Zero Manual Maintenance**: No need to manually copy files or update versions
 - ✅ **Always Up-to-Date**: Plugin marketplace stays in sync with latest changes
 - ✅ **Preserved Marketplace Context**: Marketplace-specific files remain unchanged
@@ -324,22 +338,22 @@ To submit a different plugin to this marketplace, please open an issue with:
 #### For Maintainers
 
 The sync is handled by:
-- **Workflow**: `.github/workflows/sync-plugin.yml` (in main SDD repo)
-- **Script**: `src/sdd/project/sync_plugin.py` (in main SDD repo)
+- **Workflow**: `.github/workflows/sync-plugin.yml` (in main Solokit repo)
+- **Script**: `src/solokit/project/sync_plugin.py` (in main Solokit repo)
 - **Secret**: `PLUGIN_REPO_TOKEN` (GitHub PAT with repo access)
 
-Manual sync can be triggered via GitHub Actions workflow dispatch in the main SDD repository.
+Manual sync can be triggered via GitHub Actions workflow dispatch in the main Solokit repository.
 
 ---
 
 ## Support
 
-### For SDD Plugin Issues
+### For Solokit Plugin Issues
 
-Report issues and view documentation at the standalone SDD repository:
-- [Report SDD Issues](https://github.com/ankushdixit/sdd/issues)
-- [View SDD Documentation](https://github.com/ankushdixit/sdd#readme)
-- [SDD Discussions](https://github.com/ankushdixit/sdd/discussions)
+Report issues and view documentation at the standalone Solokit repository:
+- [Report Solokit Issues](https://github.com/ankushdixit/solokit/issues)
+- [View Solokit Documentation](https://github.com/ankushdixit/solokit#readme)
+- [Solokit Discussions](https://github.com/ankushdixit/solokit/discussions)
 
 ### For Marketplace Issues
 
@@ -350,7 +364,7 @@ For issues specific to the marketplace or plugin installation:
 
 ## Technology Stack
 
-**SDD Plugin:**
+**Solokit Plugin:**
 - **Language:** Python 3.9+
 - **Plugin System:** Claude Code native extensions
 - **Visualization:** Graphviz (dependency graphs)
@@ -363,7 +377,7 @@ For issues specific to the marketplace or plugin installation:
 
 Each plugin has its own license. See individual plugin directories for details.
 
-- **SDD Plugin**: MIT License
+- **Solokit Plugin**: MIT License
 
 ---
 
@@ -375,4 +389,4 @@ Each plugin has its own license. See individual plugin directories for details.
 
 ---
 
-**Ready for use!** Install the SDD plugin and start building with perfect context continuity.
+**Ready for use!** Install the Solokit plugin and start building with team-level sophistication.

@@ -11,28 +11,28 @@
   },
   "plugins": [
     {
-      "name": "sdd",
-      "source": "./sdd",
-      "description": "Session-Driven Development for Claude Code - Maintain perfect context across multiple AI coding sessions with quality gates, dependency management, and knowledge accumulation",
-      "version": "0.7.0",
+      "name": "solokit",
+      "source": "./solokit",
+      "description": "Solokit - Structured Solo Development with AI and Quality Automation for Claude Code. Build production software alone with team-level sophistication.",
+      "version": "0.1.0",
       "author": {
         "name": "Ankush Dixit",
         "url": "https://github.com/ankushdixit"
       },
-      "homepage": "https://github.com/ankushdixit/sdd",
-      "repository": "https://github.com/ankushdixit/sdd",
+      "homepage": "https://github.com/ankushdixit/solokit",
+      "repository": "https://github.com/ankushdixit/solokit",
       "license": "MIT",
       "keywords": [
-        "session-management",
-        "quality-gates",
-        "dependency-management",
-        "learning-system",
+        "solo-development",
+        "ai-native",
+        "quality-automation",
+        "workflow",
         "ai-development",
         "claude-code",
-        "sdd"
+        "solokit"
       ],
       "category": "productivity",
-      "tags": ["session", "quality", "learning", "workflow"]
+      "tags": ["solo", "quality", "workflow", "productivity"]
     }
   ]
 }
