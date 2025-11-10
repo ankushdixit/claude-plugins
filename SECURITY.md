@@ -2,11 +2,11 @@
 
 ## Reporting Security Vulnerabilities
 
-### For SDD Plugin Security Issues
+### For Solokit Plugin Security Issues
 
-If you discover a security vulnerability in the **SDD plugin**, please report it at the main repository:
+If you discover a security vulnerability in the **Solokit plugin**, please report it at the main repository:
 
-👉 **https://github.com/ankushdixit/sdd/security/advisories/new**
+👉 **https://github.com/ankushdixit/solokit/security/advisories/new**
 
 Or email: ankushdixit@users.noreply.github.com
 
@@ -29,7 +29,7 @@ We will respond within 48 hours.
 
 | Repository | Version | Supported          |
 | ---------- | ------- | ------------------ |
-| SDD Plugin | 0.7.x   | :white_check_mark: |
+| Solokit Plugin | 0.1.x   | :white_check_mark: |
 | Marketplace| 1.x     | :white_check_mark: |
 
 ---
@@ -49,5 +49,5 @@ When using plugins from this marketplace:
 
 This security policy covers:
 - ✅ Marketplace installation and distribution mechanisms
-- ✅ SDD plugin (report at https://github.com/ankushdixit/sdd)
+- ✅ Solokit plugin (report at https://github.com/ankushdixit/solokit)
 - ❌ Third-party plugins (report to their respective maintainers)

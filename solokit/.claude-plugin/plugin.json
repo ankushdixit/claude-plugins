@@ -1,0 +1,21 @@
+{
+  "name": "solokit",
+  "version": "0.1.0",
+  "description": "Solokit - Structured Solo Development with AI and Quality Automation for Claude Code",
+  "author": {
+    "name": "Ankush Dixit",
+    "url": "https://github.com/ankushdixit"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/ankushdixit/solokit",
+  "repository": "https://github.com/ankushdixit/solokit",
+  "keywords": [
+    "solo-development",
+    "ai-native",
+    "quality-automation",
+    "workflow",
+    "ai-development",
+    "claude-code",
+    "solokit"
+  ]
+}
