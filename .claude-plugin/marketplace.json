@@ -14,7 +14,7 @@
       "name": "solokit",
       "source": "./solokit",
       "description": "Solokit - Structured Solo Development with AI and Quality Automation for Claude Code. Build production software alone with team-level sophistication.",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "author": {
         "name": "Ankush Dixit",
         "url": "https://github.com/ankushdixit"
