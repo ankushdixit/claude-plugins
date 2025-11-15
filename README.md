@@ -11,7 +11,7 @@ Official marketplace for Claude Code plugins by Ankush Dixit.
 **Structured Solo Development with AI and Quality Automation** - Build production software alone with team-level sophistication.
 
 - **Plugin Name**: `solokit`
-- **Version**: 0.1.2
+- **Version**: 0.1.3
 - **Status**: Production-ready ✅
 - **License**: MIT
 
@@ -239,7 +239,7 @@ Solokit includes 4 production-ready stacks, each with 4 quality tiers:
 
 ## Plugin Development Status
 
-**Current Version:** 0.1.2 (Initial Public Release)
+**Current Version:** 0.1.3 (Initial Public Release)
 
 ### Core Features Complete
 
@@ -254,7 +254,7 @@ Solokit includes 4 production-ready stacks, each with 4 quality tiers:
 | Integration Testing | ✅ Complete |
 | Git Workflow Automation | ✅ Complete |
 
-**Test Coverage:** 2,391/2,391 tests passing (100%)
+**Test Coverage:** 2,954/2,954 tests passing (100%)
 
 ---
 
