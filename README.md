@@ -11,12 +11,13 @@ Official marketplace for Claude Code plugins by Ankush Dixit.
 **Structured Solo Development with AI and Quality Automation** - Build production software alone with team-level sophistication.
 
 - **Plugin Name**: `solokit`
-- **Version**: 0.1.3
+- **Version**: 0.1.4
 - **Status**: Production-ready ✅
 - **License**: MIT
 
 **Key Features:**
 - ✅ **4 Production Stacks** - T3 Stack, FastAPI, Refine, Next.js with 4 quality tiers each
+- ✅ **Three-File Documentation Model** - CLAUDE.md (AI guidance), ARCHITECTURE.md (technical docs), README.md (quick start)
 - ✅ **Session Management** - AI-powered briefings with perfect context continuity
 - ✅ **Work Item Tracking** - Dependency graphs, critical path analysis, spec-first architecture
 - ✅ **Learning System** - AI-powered knowledge capture and curation (6 categories)
@@ -237,15 +238,36 @@ Solokit includes 4 production-ready stacks, each with 4 quality tiers:
 
 ---
 
+## Three-File Documentation Model
+
+Every project initialized with `sk init` includes a comprehensive documentation structure:
+
+| File | Purpose | Audience |
+|------|---------|----------|
+| **README.md** | Quick start guide | Human developers |
+| **ARCHITECTURE.md** | Technical documentation | Human developers |
+| **CLAUDE.md** | AI guidance | Claude Code |
+
+**CLAUDE.md** is a key differentiator - it provides Claude Code with:
+- Stack-specific architecture rules and patterns
+- Comprehensive Solokit command usage guide
+- Work item management instructions
+- Anti-patterns and common mistakes to avoid
+
+This means Claude Code automatically understands your project's conventions from the first session.
+
+---
+
 ## Plugin Development Status
 
-**Current Version:** 0.1.3 (Initial Public Release)
+**Current Version:** 0.1.4
 
 ### Core Features Complete
 
 | Feature | Status |
 |---------|--------|
 | Production Templates (4 stacks × 4 tiers) | ✅ Complete |
+| Three-File Documentation Model | ✅ Complete |
 | Session Management | ✅ Complete |
 | Work Item System | ✅ Complete |
 | Dependency Visualization | ✅ Complete |
@@ -254,7 +276,7 @@ Solokit includes 4 production-ready stacks, each with 4 quality tiers:
 | Integration Testing | ✅ Complete |
 | Git Workflow Automation | ✅ Complete |
 
-**Test Coverage:** 2,954/2,954 tests passing (100%)
+**Test Coverage:** 3,225 tests passing (100%), 96% code coverage
 
 ---
 
