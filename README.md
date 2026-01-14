@@ -11,7 +11,7 @@ Official marketplace for Claude Code plugins by Ankush Dixit.
 **Structured Solo Development with AI and Quality Automation** - Build production software alone with team-level sophistication.
 
 - **Plugin Name**: `solokit`
-- **Version**: 0.2.1
+- **Version**: 0.3.0
 - **Status**: Production-ready ✅
 - **License**: MIT
 
@@ -260,7 +260,7 @@ This means Claude Code automatically understands your project's conventions from
 
 ## Plugin Development Status
 
-**Current Version:** 0.2.1
+**Current Version:** 0.3.0
 
 ### Core Features Complete
 
